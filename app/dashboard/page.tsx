@@ -2,64 +2,83 @@
 
 import { useEffect, useState } from "react";
 import { Button, TableWrapper } from "../components";
-import { userData, headTitles } from "./helpers";
+import { headTitles } from "./helpers";
 import { UserRegistration } from "./userRegistration";
+import { UseApiCall, UseLazyApiCall } from "../hooks";
+import { toast, ToastContainer } from "react-toastify";
+import { toastHandler } from "../utils/helpers";
+import {  toastTypesKeys } from "../utils/constants";
 
 function Dashboard() {
   const [isShow, setIsShow] = useState(false);
-  const [data, setData] = useState({ users: [] });
   const [isEdit, setIsEdit] = useState({ data: {} });
 
-  async function getUsersCall() {
-    try {
-      const response = await fetch("http://localhost:3001/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  const {
+    data: userData = { users: [] },
+    isLoading,
+    error,
+    refetch,
+  } = UseApiCall({
+    url: "users",
+    method: "GET",
+  });
 
-      const result = await response.json();
+  const [getData, { data: removeData }] = UseLazyApiCall({
+    url: "remove",
+    method: "DELETE",
+  }) as any;
 
-      if (response.ok) {
-        setData(result);
-        // Handle success, like redirecting the user or showing a success message
-      } else {
-        console.error("Signup failed:", result);
-        // Handle error, like showing an error message to the user
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      // Handle network errors
-    }
-  }
-  useEffect(() => {
-    getUsersCall();
-  }, []);
-  
-  function onClickHandler(elem: any) {
+  function onClickHandler(type: any, elem: any) {
     return () => {
-      setIsEdit({ data: elem }), setIsShow(true);
+      if (type === "update") {
+        setIsEdit({ data: elem }), setIsShow(true);
+        return;
+      }
+      if (type === "remove") {
+        const removeDetail = {
+          id: elem.id,
+        };
+        getData({ params: removeDetail });
+        return;
+      }
     };
   }
 
+  useEffect(() => {
+    if (removeData?.message) {
+      toastHandler(removeData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        refetch()
+      }, 3000);
+      return;
+    }
+  }, [removeData]);
+
+
   return (
     <div>
-      <div className="flex justify-end m-10">
+      <ToastContainer  />
+      <h1 className="text-[20px] font-bold text-center mt-10">
+        Registered Users
+      </h1>
+      <div className="flex justify-end mx-20 my-5">
         <UserRegistration
           editableData={isEdit?.data}
           setIsEdit={setIsEdit}
           setIsShow={setIsShow}
           isShow={isShow}
+          refetchUsers={refetch}
         />
       </div>
-      <div>
-        <TableWrapper
-          headerList={headTitles}
-          items={data?.users}
-          TableRow={TableRow}
-          onClickHandler={onClickHandler}
-        />
+      <div className="mx-20 h-[40dvh] overflow-y-scroll">
+        <div className="border-[#ECEDED] border-[1px] rounded-lg">
+          <TableWrapper
+            headerList={headTitles}
+            items={userData?.users}
+            TableRow={TableRow}
+            onClickHandler={onClickHandler}
+          />
+        </div>
       </div>
     </div>
   );
@@ -82,9 +101,17 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-6 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
-          onClick={onClickHandler(elem)}
+          onClick={onClickHandler("update", elem)}
         >
           Update
+        </Button>
+      </td>
+      <td className="px-6 py-4">
+        <Button
+          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          onClick={onClickHandler("remove", elem)}
+        >
+          Remove
         </Button>
       </td>
     </tr>

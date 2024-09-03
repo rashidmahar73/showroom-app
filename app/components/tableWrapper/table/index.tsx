@@ -1,4 +1,4 @@
-function Table({ children, Body }: any) {
+function Table({ children }: any) {
   return <table className="table-auto">{children}</table>;
 }
 
@@ -6,7 +6,7 @@ function Head({ children }: any) {
   return (
     <thead className="break-words w-full">
       {" "}
-      <tr className="table-fixed table w-full">{children}</tr>
+      <tr className="table-fixed table bg-[#ECEDED] w-full">{children}</tr>
     </thead>
   );
 }

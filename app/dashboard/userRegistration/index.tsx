@@ -1,11 +1,20 @@
 import { Button, Modal } from "@/app/components";
 import { Form } from "./form";
+import { UseLazyApiCall } from "@/app/hooks";
+import { useEffect } from "react";
+import { toastHandler } from "@/app/utils/helpers";
+import { toastTypesKeys } from "@/app/utils/constants";
 
-function UserRegistration({ editableData, setIsEdit, setIsShow, isShow }: any) {
+function UserRegistration({ editableData, setIsEdit, setIsShow, isShow, refetchUsers }: any) {
   function handleModalClose() {
     setIsEdit({ data: {} });
     setIsShow(!isShow);
   }
+
+  const [getData, { data: signupData }] = UseLazyApiCall({
+    url: "signup",
+    method: "POST",
+  }) as any;
 
   async function dataCarrier(userData: any) {
     const userDataDetails = {
@@ -16,26 +25,20 @@ function UserRegistration({ editableData, setIsEdit, setIsShow, isShow }: any) {
       role: userData?.role?.toLowerCase(),
     };
 
-    try {
-      const response = await fetch("http://localhost:3001/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userDataDetails),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        console.log(result.message);
-      } else {
-        console.error("Signup failed:", result);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    getData({ params: userDataDetails });
   }
+
+  useEffect(() => {
+    if (signupData?.message) {
+      toastHandler(signupData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        setIsShow(false);
+        refetchUsers()
+      }, 3000);
+      return;
+    }
+  }, [signupData]);
+
 
   return (
     <>
@@ -50,7 +53,7 @@ function UserRegistration({ editableData, setIsEdit, setIsShow, isShow }: any) {
         className="h-[40px] bg-[#2182b0] text-white rounded-[5px] px-3"
         onClick={handleModalClose}
       >
-        Add User
+        Add Users
       </Button>
     </>
   );

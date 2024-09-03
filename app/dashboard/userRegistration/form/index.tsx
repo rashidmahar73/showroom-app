@@ -104,7 +104,7 @@ function Form({ dataCarrier, editableData }: any) {
             onClick={onSubmit}
             disabled={isFormFilled}
           >
-            Add User
+            Submit
           </Button>
         </div>
       </div>

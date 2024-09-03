@@ -3,7 +3,7 @@ import { navPaths } from "../../utils/constants";
 const navItems = [
   {
     text: "Dashboard",
-    path: "/",
+    path: "/dashboard",
   },
   {
     text: "Employee",
