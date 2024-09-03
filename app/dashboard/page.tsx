@@ -89,7 +89,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[16px] table-fixed table w-full text-black"
       }
     >
       <td className="px-6 py-4">{elem?.id}</td>
