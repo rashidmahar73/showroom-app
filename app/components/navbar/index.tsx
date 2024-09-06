@@ -1,21 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { Button, ConditionalRenderer } from "@/app/components";
+import { Button } from "@/app/components";
 import { NavItems } from "./listItems";
 import { CollapseIcon } from "../../icons";
 import { navItems } from "./helpers";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   function handleNavbar() {
     setIsOpen(!isOpen);
   }
 
-
   function handleLogout() {
     localStorage.removeItem("token");
+    router.push(`/login`);
+    return;
   }
 
   return (
@@ -38,14 +41,12 @@ function Navbar() {
         <NavItems items={navItems} />
       </div>
       <div>
-        {/* <ConditionalRenderer condition={isUserLogin}>
-          <Button
-            className="bg-gray-800 text-white flex items-center"
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </ConditionalRenderer> */}
+        <Button
+          className="bg-gray-800 text-white flex items-center"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
       </div>
     </nav>
   );

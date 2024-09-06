@@ -7,7 +7,7 @@ import { AddOrUpdateAmount } from "./amountActions";
 import { AddOrUpdatePurchase } from "./purchaseActions";
 import { AddOrUpdateSell } from "./sellActions";
 import { AddOrUpdateExtraExpense } from "./extraResponseActions";
-
+import withAuth from "@/app/withAuth";
 
 function Actions() {
   const pathname = usePathname();
@@ -16,19 +16,22 @@ function Actions() {
   const isAddPurchase = pathname?.includes("addPurchase");
   const isUpdateAmount = pathname?.includes("updateAmount");
   const isupdatePurchase = pathname?.includes("updatePurchase");
-  const isUpdateSell=pathname?.includes("updateSell");
-  const isAddExtraExpense=pathname?.includes("extraExpense");
-  const isUpdateExtraExpense=pathname?.includes("updateExtraExpense");
+  const isUpdateSell = pathname?.includes("updateSell");
+  const isAddExtraExpense = pathname?.includes("extraExpense");
+  const isUpdateExtraExpense = pathname?.includes("updateExtraExpense");
 
   return (
     <div>
-        <ConditionalRenderer
+      <ConditionalRenderer
         condition={
           !isAddAmount &&
           !isAddPurchase &&
           !isUpdateAmount &&
           !isupdatePurchase &&
-          !isAddSell && !isUpdateSell && !isAddExtraExpense && !isUpdateExtraExpense
+          !isAddSell &&
+          !isUpdateSell &&
+          !isAddExtraExpense &&
+          !isUpdateExtraExpense
         }
       >
         <AddOrUpdateInvestor />
@@ -36,18 +39,20 @@ function Actions() {
       <ConditionalRenderer condition={isAddAmount || isUpdateAmount}>
         <AddOrUpdateAmount />
       </ConditionalRenderer>
-    
+
       <ConditionalRenderer condition={isAddPurchase || isupdatePurchase}>
         <AddOrUpdatePurchase />
       </ConditionalRenderer>
       <ConditionalRenderer condition={isAddSell || isUpdateSell}>
         <AddOrUpdateSell />
       </ConditionalRenderer>
-      <ConditionalRenderer condition={isAddExtraExpense || isUpdateExtraExpense}>
-        <AddOrUpdateExtraExpense/>
+      <ConditionalRenderer
+        condition={isAddExtraExpense || isUpdateExtraExpense}
+      >
+        <AddOrUpdateExtraExpense />
       </ConditionalRenderer>
     </div>
   );
 }
 
-export default Actions;
+export default withAuth(Actions);

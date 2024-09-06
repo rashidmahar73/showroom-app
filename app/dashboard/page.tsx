@@ -8,6 +8,7 @@ import { UseApiCall, UseLazyApiCall } from "../hooks";
 import { toast, ToastContainer } from "react-toastify";
 import { toastHandler } from "../utils/helpers";
 import {  toastTypesKeys } from "../utils/constants";
+import withAuth from "../withAuth";
 
 function Dashboard() {
   const [isShow, setIsShow] = useState(false);
@@ -118,4 +119,4 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
   );
 }
 
-export default Dashboard;
+export default withAuth(Dashboard);

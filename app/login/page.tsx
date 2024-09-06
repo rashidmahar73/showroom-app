@@ -35,6 +35,10 @@ function Login() {
       }, 3000);
       return 
     }
+    if(loginData?.status === 401){
+      toastHandler(loginData.message, toastTypesKeys.error);
+      return
+    }
   }, [loginData]);
 
   return <><ToastContainer/><Form dataCarrier={dataCarrier} /></>;

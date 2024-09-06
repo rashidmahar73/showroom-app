@@ -6,6 +6,7 @@ import { headTitles, investorData } from "./helpers";
 import { DownArrowIcon } from "../icons";
 import { AmountDetails } from "./amountDetails";
 import { useState } from "react";
+import withAuth from "../withAuth";
 
 function Investor() {
   const router = useRouter();
@@ -35,7 +36,7 @@ function Investor() {
       <h1 className="text-[20px] text-center font-bold">Investor</h1>
       <div className="flex justify-end">
         <Button
-          className="h-[40px] bg-[#2182b0] text-white rounded-[5px] px-3"
+          className="h-[40px] bg-[#2182b0] text-[13px] text-white rounded-[5px] px-3"
           onClick={handleInvestor}
         >
           Add Investor
@@ -145,4 +146,4 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
   );
 }
 
-export default Investor;
+export default withAuth(Investor);
