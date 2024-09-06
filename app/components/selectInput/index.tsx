@@ -3,7 +3,6 @@ import { Fragment, useState } from "react";
 
 import { ConditionalRenderer } from "../conditionalRenderer";
 
-
 import { DropdownIcon } from "@/app/icons";
 import { ListItem } from "./listItem";
 import { InputHead } from "./head";
@@ -34,7 +33,7 @@ function SelectInput({
           className={className || {}}
           onClick={onClick}
           value={selectedValue}
-          Icon={<DropdownIcon />}
+          isOpen={isOpen}
         />
         <ConditionalRenderer condition={!!isOpen}>
           <ul

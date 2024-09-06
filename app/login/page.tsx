@@ -15,6 +15,12 @@ function Login() {
     method: "POST",
   }) as any;
 
+  const token = localStorage.getItem("token");
+  if (token) {
+    router.push(`/dashboard`);
+    return;
+  }
+
   async function dataCarrier(userData: any) {
     const userDataDetails = {
       email: userData.email,
@@ -29,19 +35,24 @@ function Login() {
     if (loginData?.status === 200) {
       toastHandler(loginData.message, toastTypesKeys.success);
       setTimeout(() => {
-        localStorage.setItem("token",loginData?.token)
+        localStorage.setItem("token", loginData?.token);
         router.push(`/dashboard`);
-        return 
+        return;
       }, 3000);
-      return 
+      return;
     }
-    if(loginData?.status === 401){
+    if (loginData?.status === 401) {
       toastHandler(loginData.message, toastTypesKeys.error);
-      return
+      return;
     }
   }, [loginData]);
 
-  return <><ToastContainer/><Form dataCarrier={dataCarrier} /></>;
+  return (
+    <>
+      <ToastContainer />
+      <Form dataCarrier={dataCarrier} />
+    </>
+  );
 }
 
 export default Login;
