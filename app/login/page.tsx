@@ -15,23 +15,13 @@ function Login() {
     method: "POST",
   }) as any;
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      setIsAuthenticated(true);
-      return;
-    }
     if (token) {
       router.push("/dashboard");
       return;
     }
   }, []);
-
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
-  }
 
   async function dataCarrier(userData: any) {
     const userDataDetails = {
