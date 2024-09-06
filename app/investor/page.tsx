@@ -125,7 +125,11 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
           </Button>
         </td>
         <td className="px-6 py-4" onClick={onClickAmountDetails}>
-          <div className="flex items-center justify-center cursor-pointer">
+          <div className={`${
+            isOpen.status
+              ? "rotate-180 transition ease-in-out delay-200"
+              : "rotate-0 transition ease-in-out delay-200"
+          } flex items-center justify-center cursor-pointer`}>
             <DownArrowIcon />
           </div>
         </td>

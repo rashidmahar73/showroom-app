@@ -98,11 +98,18 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         </td>
         <td className="px-6 py-4">
           <ConditionalRenderer condition={purchase.isPurchase}>
+            
             <Button
-              className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+              className="h-[40px] text-[15px] text-white px-2 rounded-[5px]"
               onClick={onClickPurchaseDetails}
             >
-              <DownArrowIcon />
+              <div className={`${
+            isOpen.status
+              ? "rotate-180 transition ease-in-out delay-200"
+              : "rotate-0 transition ease-in-out delay-200"
+          } flex items-center justify-center cursor-pointer`}>
+            <DownArrowIcon />
+          </div>
             </Button>
           </ConditionalRenderer>
           <ConditionalRenderer condition={!purchase.isPurchase}>

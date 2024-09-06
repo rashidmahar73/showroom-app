@@ -110,10 +110,16 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         <td className="px-6 py-4">
         <ConditionalRenderer condition={extraExpense.isExtraExpense}>
             <Button
-              className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+              className="h-[40px] text-[15px] text-white px-2 rounded-[5px]"
               onClick={onClickExtraExpense}
             >
-              <DownArrowIcon />
+              <div className={`${
+            isOpen.status
+              ? "rotate-180 transition ease-in-out delay-200"
+              : "rotate-0 transition ease-in-out delay-200"
+          } flex items-center justify-center cursor-pointer`}>
+            <DownArrowIcon />
+          </div>
             </Button>
           </ConditionalRenderer>
           <ConditionalRenderer condition={!extraExpense.isExtraExpense}>
@@ -128,10 +134,16 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         <td className="px-6 py-4">
           <ConditionalRenderer condition={sell.isSell}>
             <Button
-              className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+              className="h-[40px] text-[15px] text-white px-2 rounded-[5px]"
               onClick={onClickSellDetails}
             >
-              <DownArrowIcon />
+              <div className={`${
+            isOpen.status
+              ? "rotate-180 transition ease-in-out delay-200"
+              : "rotate-0 transition ease-in-out delay-200"
+          } flex items-center justify-center cursor-pointer`}>
+            <DownArrowIcon />
+          </div>
             </Button>
           </ConditionalRenderer>
           <ConditionalRenderer condition={!sell.isSell}>

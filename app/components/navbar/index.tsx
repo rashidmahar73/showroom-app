@@ -13,7 +13,6 @@ function Navbar() {
     setIsOpen(!isOpen);
   }
 
-  const isUserLogin = localStorage.getItem("token") || "";
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -39,14 +38,14 @@ function Navbar() {
         <NavItems items={navItems} />
       </div>
       <div>
-        <ConditionalRenderer condition={isUserLogin}>
+        {/* <ConditionalRenderer condition={isUserLogin}>
           <Button
             className="bg-gray-800 text-white flex items-center"
             onClick={handleLogout}
           >
             Logout
           </Button>
-        </ConditionalRenderer>
+        </ConditionalRenderer> */}
       </div>
     </nav>
   );
