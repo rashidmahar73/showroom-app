@@ -2,18 +2,31 @@
 
 import { useRouter } from "next/navigation";
 import { Navbar } from "../components";
+import { useEffect, useState } from "react";
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
     const router = useRouter();
-    const token = localStorage.getItem("token");
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
+      null
+    );
 
-    if (!token) {
-      router.push("/login");
-      return;
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+      if (token) {
+        setIsAuthenticated(true);
+        return;
+      }
+    }, []);
+
+    if (isAuthenticated === null) {
+      return <div>Loading...</div>;
     }
 
-    // If the token exists, render the wrapped component
     return (
       <>
         <Navbar />

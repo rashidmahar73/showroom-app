@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { UseLazyApiCall } from "../hooks";
 import { Form } from "./form";
 import { toastHandler } from "../utils/helpers";
@@ -15,10 +15,22 @@ function Login() {
     method: "POST",
   }) as any;
 
-  const token = localStorage.getItem("token");
-  if (token) {
-    router.push(`/dashboard`);
-    return;
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsAuthenticated(true);
+      return;
+    }
+    if (token) {
+      router.push("/dashboard");
+      return;
+    }
+  }, []);
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
   }
 
   async function dataCarrier(userData: any) {
