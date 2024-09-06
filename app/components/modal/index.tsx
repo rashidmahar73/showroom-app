@@ -9,7 +9,7 @@ function Modal({ children, isShow, className }: any) {
       <div
         className={`fixed inset-0 z-10 my-[0.8dvh] mx-5 rounded-lg overflow-visible ${className}`}
       >
-        <div className="bg-white py-5 w-full overflow-visible rounded-lg px-[0.8dvw]">
+        <div className="bg-white py-5 overflow-visible rounded-lg px-[0.8dvw]">
           {children}
         </div>
       </div>

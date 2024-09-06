@@ -129,7 +129,7 @@ function AddOrUpdateAmount() {
       />
       <div className="flex justify-end mt-5">
         <Button
-          className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
+          className="h-[40px] text-white text-[13px] px-3 rounded-[5px] bg-[#2182b0]"
           onClick={onClickAmountAction}
         >
           {isEdit || isUpdate ? "Update" : "Add"} Amount
@@ -147,7 +147,7 @@ function AddOrUpdateAmount() {
 
         <div className="flex justify-end mt-5">
           <Button
-            className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
+            className="h-[40px] text-white px-3 text-[13px] rounded-[5px] bg-[#2182b0]"
             onClick={onSubmit}
           >
             Submit
@@ -166,10 +166,10 @@ function InvestorTableRow({ elem, className = "" }: any) {
         "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.investorId}</td>
-      <td className="px-6 py-4">{elem?.investorName}</td>
-      <td className="px-6 py-4">{elem?.phoneNumber}</td>
-      <td className="px-6 py-4">{elem?.CNIC}</td>
+      <td className="px-2 py-4">{elem?.investorId}</td>
+      <td className="px-2 py-4">{elem?.investorName}</td>
+      <td className="px-2 py-4">{elem?.phoneNumber}</td>
+      <td className="px-2 py-4">{elem?.CNIC}</td>
     </tr>
   );
 }
@@ -182,11 +182,11 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.amountID}</td>
-      <td className="px-6 py-4">{elem?.investorAmount}</td>
-      <td className="px-6 py-4">{elem?.investorAmountType}</td>
-      <td className="px-6 py-4">{elem?.investorAmountDate}</td>
-      <td className="px-6 py-4">
+      <td className="px-2 py-4">{elem?.amountID}</td>
+      <td className="px-2 py-4">{elem?.investorAmount}</td>
+      <td className="px-2 py-4">{elem?.investorAmountType}</td>
+      <td className="px-2 py-4">{elem?.investorAmountDate}</td>
+      <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("edit", elem)}

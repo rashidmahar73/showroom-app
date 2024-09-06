@@ -198,10 +198,10 @@ function AmountTableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.amountID}</td>
-      <td className="px-6 py-4">{elem?.investorAmount}</td>
-      <td className="px-6 py-4">{elem?.investorAmountType}</td>
-      <td className="px-6 py-4">{elem?.investorAmountDate}</td>
+      <td className="px-2 py-4">{elem?.amountID}</td>
+      <td className="px-2 py-4">{elem?.investorAmount}</td>
+      <td className="px-2 py-4">{elem?.investorAmountType}</td>
+      <td className="px-2 py-4">{elem?.investorAmountDate}</td>
     </tr>
   );
 }
@@ -214,15 +214,15 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.amountID}</td>
-      <td className="px-6 py-4">{elem?.purchaseID}</td>
-      <td className="px-6 py-4">{elem?.vehicleCompany}</td>
-      <td className="px-6 py-4">{elem?.vehicleType}</td>
-      <td className="px-6 py-4">{elem?.vehicleRegistrationNo}</td>
-      <td className="px-6 py-4">{elem?.vehicleChasesNo}</td>
-      <td className="px-6 py-4">{elem?.vehicleModel}</td>
-      <td className="px-6 py-4">{elem?.vehicleMeterReading}</td>
-      <td className="px-6 py-4">
+      <td className="px-2 py-4">{elem?.amountID}</td>
+      <td className="px-2 py-4">{elem?.purchaseID}</td>
+      <td className="px-2 py-4">{elem?.vehicleCompany}</td>
+      <td className="px-2 py-4">{elem?.vehicleType}</td>
+      <td className="px-2 py-4">{elem?.vehicleRegistrationNo}</td>
+      <td className="px-2 py-4">{elem?.vehicleChasesNo}</td>
+      <td className="px-2 py-4">{elem?.vehicleModel}</td>
+      <td className="px-2 py-4">{elem?.vehicleMeterReading}</td>
+      <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("edit", elem)}

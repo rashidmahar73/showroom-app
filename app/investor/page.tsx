@@ -50,7 +50,7 @@ function Investor() {
                 <h1>{elem.trackingID}</h1>
                 <div>
                   <Button
-                    className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+                    className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 my-5 mx-5 rounded-[5px]"
                   >
                     Delete
                   </Button>
@@ -96,35 +96,35 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
           "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
         }
       >
-        <td className="px-6 py-4">{elem?.investorID}</td>
-        <td className="px-6 py-4">{elem?.investorName}</td>
-        <td className="px-6 py-4">{elem?.phoneNumber}</td>
-        <td className="px-6 py-4">{elem?.CNIC}</td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">{elem?.investorID}</td>
+        <td className="px-2 py-4">{elem?.investorName}</td>
+        <td className="px-2 py-4">{elem?.phoneNumber}</td>
+        <td className="px-2 py-4">{elem?.CNIC}</td>
+        <td className="px-2 py-4">
           <Button
-            className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+            className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("updateInvestor", elem)}
           >
             Update
           </Button>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <Button
-            className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+            className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("remove", elem)}
           >
             Remove
           </Button>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <Button
-            className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+            className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("addAmount", elem)}
           >
             Add Amount
           </Button>
         </td>
-        <td className="px-6 py-4" onClick={onClickAmountDetails}>
+        <td className="px-2 py-4" onClick={onClickAmountDetails}>
           <div className={`${
             isOpen.status
               ? "rotate-180 transition ease-in-out delay-200"

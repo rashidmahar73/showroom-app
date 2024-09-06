@@ -40,7 +40,7 @@ function AmountDetails({ investorID }: any) {
     };
   }
   return (
-    <div>
+    <div className="border-[#ff0000] border-[2px]">
       <TableWrapper
         headerList={headTitles}
         items={amountDetails}
@@ -76,11 +76,11 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
           "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
         }
       >
-        <td className="px-6 py-4">{elem?.amountID}</td>
-        <td className="px-6 py-4">{elem?.investorAmount}</td>
-        <td className="px-6 py-4">{elem?.investorAmountType}</td>
-        <td className="px-6 py-4">{elem?.investorAmountDate}</td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">{elem?.amountID}</td>
+        <td className="px-2 py-4">{elem?.investorAmount}</td>
+        <td className="px-2 py-4">{elem?.investorAmountType}</td>
+        <td className="px-2 py-4">{elem?.investorAmountDate}</td>
+        <td className="px-2 py-4">
           <Button
             className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("update", elem)}
@@ -88,7 +88,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
             Update
           </Button>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <Button
             className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("remove", elem)}
@@ -96,7 +96,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
             Remove
           </Button>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <ConditionalRenderer condition={purchase.isPurchase}>
             
             <Button

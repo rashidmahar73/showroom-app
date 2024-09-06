@@ -31,6 +31,7 @@ function Login() {
       setTimeout(() => {
         localStorage.setItem("token",loginData?.token)
         router.push(`/dashboard`);
+        return 
       }, 3000);
       return 
     }

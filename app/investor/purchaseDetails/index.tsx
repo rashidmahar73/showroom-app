@@ -51,7 +51,7 @@ function PurchaseDetails({ amountID }: any) {
     };
   }
   return (
-    <div>
+    <div className="border-[#008000] border-[2px]">
       <TableWrapper
         headerList={headTitles}
         items={purchaseDetails}
@@ -99,15 +99,15 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
           "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
         }
       >
-        <td className="px-6 py-4">{elem?.purchaseID}</td>
-        <td className="px-6 py-4">{elem?.vehicleCompany}</td>
-        <td className="px-6 py-4">{elem?.vehicleType}</td>
-        <td className="px-6 py-4">{elem?.vehicleRegistrationNo}</td>
-        <td className="px-6 py-4">{elem?.vehicleChasesNo}</td>
-        <td className="px-6 py-4">{elem?.vehicleModel}</td>
-        <td className="px-6 py-4">{elem?.vehicleMeterReading}</td>
-        <td className="px-6 py-4">{elem?.purchaseDate}</td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">{elem?.purchaseID}</td>
+        <td className="px-2 py-4">{elem?.vehicleCompany}</td>
+        <td className="px-2 py-4">{elem?.vehicleType}</td>
+        <td className="px-2 py-4">{elem?.vehicleRegistrationNo}</td>
+        <td className="px-2 py-4">{elem?.vehicleChasesNo}</td>
+        <td className="px-2 py-4">{elem?.vehicleModel}</td>
+        <td className="px-2 py-4">{elem?.vehicleMeterReading}</td>
+        <td className="px-2 py-4">{elem?.purchaseDate}</td>
+        <td className="px-2 py-4">
         <ConditionalRenderer condition={extraExpense.isExtraExpense}>
             <Button
               className="h-[40px] text-[15px] text-white px-2 rounded-[5px]"
@@ -124,14 +124,14 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
           </ConditionalRenderer>
           <ConditionalRenderer condition={!extraExpense.isExtraExpense}>
           <Button
-            className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+            className="h-[40px] bg-[#2182b0] text-[13px] w-[100px] text-white rounded-[5px]"
             onClick={onClickHandler("extraExpense", elem)}
           >
             Extra Expense
           </Button>
           </ConditionalRenderer>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <ConditionalRenderer condition={sell.isSell}>
             <Button
               className="h-[40px] text-[15px] text-white px-2 rounded-[5px]"
@@ -155,7 +155,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
             </Button>
           </ConditionalRenderer>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <Button
             className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("updatePurchase", elem)}
@@ -163,7 +163,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
             Update
           </Button>
         </td>
-        <td className="px-6 py-4">
+        <td className="px-2 py-4">
           <Button
             className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("remove", elem)}

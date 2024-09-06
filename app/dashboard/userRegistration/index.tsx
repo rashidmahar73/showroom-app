@@ -5,7 +5,13 @@ import { useEffect } from "react";
 import { toastHandler } from "@/app/utils/helpers";
 import { toastTypesKeys } from "@/app/utils/constants";
 
-function UserRegistration({ editableData, setIsEdit, setIsShow, isShow, refetchUsers }: any) {
+function UserRegistration({
+  editableData,
+  setIsEdit,
+  setIsShow,
+  isShow,
+  refetchUsers,
+}: any) {
   function handleModalClose() {
     setIsEdit({ data: {} });
     setIsShow(!isShow);
@@ -33,12 +39,11 @@ function UserRegistration({ editableData, setIsEdit, setIsShow, isShow, refetchU
       toastHandler(signupData.message, toastTypesKeys.success);
       setTimeout(() => {
         setIsShow(false);
-        refetchUsers()
+        refetchUsers();
       }, 3000);
       return;
     }
   }, [signupData]);
-
 
   return (
     <>
@@ -47,10 +52,12 @@ function UserRegistration({ editableData, setIsEdit, setIsShow, isShow, refetchU
           title="User Registration Form"
           onclickHandler={handleModalClose}
         />
-        <Form dataCarrier={dataCarrier} editableData={editableData} />
+        <div className="w-[120dvh]">
+          <Form dataCarrier={dataCarrier} editableData={editableData} />
+        </div>
       </Modal>
       <Button
-        className="h-[40px] bg-[#2182b0] text-white rounded-[5px] px-3"
+        className="h-[40px] bg-[#2182b0] text-[13px] text-white rounded-[5px] px-3"
         onClick={handleModalClose}
       >
         Add Users

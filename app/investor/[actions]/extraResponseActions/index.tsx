@@ -164,14 +164,14 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.amountID}</td>
-      <td className="px-6 py-4">{elem?.purchaseID}</td>
-      <td className="px-6 py-4">{elem?.workshopName}</td>
-      <td className="px-6 py-4">{elem?.dateModified}</td>
-      <td className="px-6 py-4">{elem?.totalExpense}</td>
-      <td className="px-6 py-4">{elem?.detail}</td>
-      <td className="px-6 py-4">{elem?.otherExpense}</td>
-      <td className="px-6 py-4">
+      <td className="px-2 py-4">{elem?.amountID}</td>
+      <td className="px-2 py-4">{elem?.purchaseID}</td>
+      <td className="px-2 py-4">{elem?.workshopName}</td>
+      <td className="px-2 py-4">{elem?.dateModified}</td>
+      <td className="px-2 py-4">{elem?.totalExpense}</td>
+      <td className="px-2 py-4">{elem?.detail}</td>
+      <td className="px-2 py-4">{elem?.otherExpense}</td>
+      <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("edit", elem)}

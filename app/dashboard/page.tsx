@@ -92,23 +92,23 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center text-[16px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.id}</td>
-      <td className="px-6 py-4">{elem?.name}</td>
-      <td className="px-6 py-4">{elem?.email}</td>
-      <td className="px-6 py-4">{elem?.phonenumber}</td>
-      <td className="px-6 py-4">{elem?.password}</td>
-      <td className="px-6 py-4">{elem?.role}</td>
-      <td className="px-6 py-4">
+      <td className="px-2 py-4">{elem?.id}</td>
+      <td className="px-2 py-4">{elem?.name}</td>
+      <td className="px-2 py-4">{elem?.email}</td>
+      <td className="px-2 py-4">{elem?.phonenumber}</td>
+      <td className="px-2 py-4">{elem?.password}</td>
+      <td className="px-2 py-4">{elem?.role}</td>
+      <td className="px-2 py-4">
         <Button
-          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("update", elem)}
         >
           Update
         </Button>
       </td>
-      <td className="px-6 py-4">
+      <td className="px-2 py-4">
         <Button
-          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("remove", elem)}
         >
           Remove

@@ -64,7 +64,7 @@ function Form({ dataCarrier, editableData }: any) {
 
   return (
     <div>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {userItems?.map(({ type, label, name, value }, index) => (
           <div key={`user-registration-${index}`}>
             <InputField
@@ -98,7 +98,7 @@ function Form({ dataCarrier, editableData }: any) {
         />
         <div className="flex justify-end mt-5">
           <Button
-            className={`h-[40px] text-white px-3 rounded-[5px] ${
+            className={`h-[40px] text-white px-3 text-[13px] rounded-[5px] ${
               isFormFilled ? "bg-[#2182b0] bg-opacity-50" : "bg-[#2182b0]"
             }`}
             onClick={onSubmit}

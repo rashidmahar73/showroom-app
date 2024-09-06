@@ -27,7 +27,7 @@ function SellDetails({ purchaseID }: any) {
     };
   }
   return (
-    <div>
+    <div className="border-[#FF5733] border-[2px]">
       <TableWrapper
         headerList={headTitles}
         items={purchaseDetails}
@@ -49,12 +49,12 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-6 py-4">{elem?.sellID}</td>
-      <td className="px-6 py-4">{elem?.sellBy}</td>
-      <td className="px-6 py-4">{elem?.sellAmount}</td>
-      <td className="px-6 py-4">{elem?.sellingDate}</td>
-      <td className="px-6 py-4">{elem?.sellingPrice}</td>
-      <td className="px-6 py-4">
+      <td className="px-2 py-4">{elem?.sellID}</td>
+      <td className="px-2 py-4">{elem?.sellBy}</td>
+      <td className="px-2 py-4">{elem?.sellAmount}</td>
+      <td className="px-2 py-4">{elem?.sellingDate}</td>
+      <td className="px-2 py-4">{elem?.sellingPrice}</td>
+      <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("updateSell", elem)}
