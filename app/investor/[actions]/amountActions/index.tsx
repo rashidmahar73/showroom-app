@@ -1,14 +1,11 @@
 "use client";
 
-import {
-  Button,
-  TableWrapper,
-  ConditionalRenderer,
-} from "@/app/components";
+import { Button, TableWrapper, ConditionalRenderer } from "@/app/components";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { headTitles, investorHeadTitles } from "./helpers";
+import { headTitles } from "./helpers";
 import { InputGrid } from "../../components";
+import { InvestorDetails, UpdateAmount } from "./components";
 
 function AddOrUpdateAmount() {
   const [amountList, setAmountList] = useState<any>([]);
@@ -97,46 +94,32 @@ function AddOrUpdateAmount() {
 
   function onSubmit() {}
 
+  if (isUpdate) {
+    return <UpdateAmount onClickAmountAction={onClickAmountAction} />;
+  }
+
   return (
     <div className="mx-20">
-      <ConditionalRenderer condition={isUpdate}>
-        <h1 className="font-bold text-center text-[20px] my-5">
-          Update Amount
-        </h1>
-        <h1 className="font-bold text-[20px] my-5">
-          Amount ID {investorAmountData.amountID}
-        </h1>
-      </ConditionalRenderer>
-      <ConditionalRenderer condition={!isUpdate && parsedData}>
-        <h1 className="font-bold text-center text-[20px] my-5">
-          Investor Details
-        </h1>
-        <div className="border-[1px] border-black rounded-sm mt-5">
-          <TableWrapper
-            headerList={investorHeadTitles}
-            items={[parsedData] || []}
-            TableRow={InvestorTableRow}
-          />
-        </div>
-      </ConditionalRenderer>
-      <ConditionalRenderer condition={!isUpdate}>
-        <h1 className="font-bold text-center text-[20px] my-5">Amount</h1>
-      </ConditionalRenderer>
+      <h1 className="font-bold text-center text-[20px] my-10">
+        Investor Details
+      </h1>
+      <InvestorDetails parsedData={parsedData} />
+      <h1 className="font-bold text-center text-[20px] my-5">Add Amount</h1>
       <InputGrid
         items={amountInputItems}
         setState={setInvestorAmountData}
         state={investorAmountData}
       />
-      <div className="flex justify-end mt-5">
+      <div className="flex justify-end my-5">
         <Button
           className="h-[40px] text-white text-[13px] px-3 rounded-[5px] bg-[#2182b0]"
           onClick={onClickAmountAction}
         >
-          {isEdit || isUpdate ? "Update" : "Add"} Amount
+          {isEdit ? "Update" : "Add"} Amount
         </Button>
       </div>
-      <ConditionalRenderer condition={!isUpdate}>
-        <div className="border-[1px] border-black rounded-sm mt-5">
+      <ConditionalRenderer condition={amountList?.length !== 0}>
+        <div className="rounded-sm mt-5">
           <TableWrapper
             headerList={headTitles}
             items={amountList || []}
@@ -144,10 +127,9 @@ function AddOrUpdateAmount() {
             onClickHandler={onClickHandler}
           />
         </div>
-
-        <div className="flex justify-end mt-5">
+        <div className="flex w-full mt-5">
           <Button
-            className="h-[40px] text-white px-3 text-[13px] rounded-[5px] bg-[#2182b0]"
+            className="h-[40px] text-white px-3 text-[13px] w-full rounded-[5px] bg-[#2182b0]"
             onClick={onSubmit}
           >
             Submit
@@ -158,28 +140,12 @@ function AddOrUpdateAmount() {
   );
 }
 
-function InvestorTableRow({ elem, className = "" }: any) {
-  return (
-    <tr
-      className={
-        className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
-      }
-    >
-      <td className="px-2 py-4">{elem?.investorId}</td>
-      <td className="px-2 py-4">{elem?.investorName}</td>
-      <td className="px-2 py-4">{elem?.phoneNumber}</td>
-      <td className="px-2 py-4">{elem?.CNIC}</td>
-    </tr>
-  );
-}
-
 function TableRow({ elem, className = "", onClickHandler }: any) {
   return (
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center border-b-[2px] border-b-[#686868] text-[15px] table-fixed table w-full text-black"
       }
     >
       <td className="px-2 py-4">{elem?.amountID}</td>

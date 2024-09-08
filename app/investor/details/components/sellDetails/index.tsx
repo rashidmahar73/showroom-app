@@ -2,9 +2,8 @@ import { Button, TableWrapper } from "@/app/components";
 import { headTitles } from "./helpers";
 import { useRouter } from "next/navigation";
 
-function SellDetails({ purchaseID }: any) {
+function SellDetails() {
   const router = useRouter();
-
   // purchaseID API Call Happen
 
   const purchaseDetails = [
@@ -16,7 +15,6 @@ function SellDetails({ purchaseID }: any) {
       sellingPrice: 877887,
     },
   ];
-
   function onClickHandler(type: any, elem: any) {
     return () => {
       if (type === "updateSell") {
@@ -27,10 +25,11 @@ function SellDetails({ purchaseID }: any) {
     };
   }
   return (
-    <div className="border-[#FF5733] border-[2px]">
+    <div>
+      <h1 className="text-[20px] font-bold my-5">Sell</h1>
       <TableWrapper
         headerList={headTitles}
-        items={purchaseDetails}
+        items={purchaseDetails || []}
         TableRow={TableRow}
         onClickHandler={onClickHandler}
       />
@@ -39,14 +38,11 @@ function SellDetails({ purchaseID }: any) {
 }
 
 function TableRow({ elem, className = "", onClickHandler }: any) {
-  const sell = {
-    isSell: true,
-  };
   return (
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[14px] table-fixed table w-full text-black"
       }
     >
       <td className="px-2 py-4">{elem?.sellID}</td>
@@ -56,7 +52,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-2 py-4">{elem?.sellingPrice}</td>
       <td className="px-2 py-4">
         <Button
-          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("updateSell", elem)}
         >
           Update

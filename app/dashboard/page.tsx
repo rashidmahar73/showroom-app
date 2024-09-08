@@ -5,9 +5,9 @@ import { Button, TableWrapper } from "../components";
 import { headTitles } from "./helpers";
 import { UserRegistration } from "./userRegistration";
 import { UseApiCall, UseLazyApiCall } from "../hooks";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { toastHandler } from "../utils/helpers";
-import {  toastTypesKeys } from "../utils/constants";
+import { toastTypesKeys } from "../utils/constants";
 import withAuth from "../withAuth";
 
 function Dashboard() {
@@ -20,7 +20,7 @@ function Dashboard() {
     error,
     refetch,
   } = UseApiCall({
-    url: "users",
+    url: "users/usersList",
     method: "GET",
   });
 
@@ -49,16 +49,15 @@ function Dashboard() {
     if (removeData?.message) {
       toastHandler(removeData.message, toastTypesKeys.success);
       setTimeout(() => {
-        refetch()
+        refetch();
       }, 3000);
       return;
     }
   }, [removeData]);
 
-
   return (
     <div>
-      <ToastContainer  />
+      <ToastContainer />
       <h1 className="text-[20px] font-bold text-center mt-10">
         Registered Users
       </h1>

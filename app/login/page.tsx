@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 function Login() {
   const router = useRouter();
   const [getData, { data: loginData }] = UseLazyApiCall({
-    url: "login",
+    url: "users/login",
     method: "POST",
   }) as any;
 

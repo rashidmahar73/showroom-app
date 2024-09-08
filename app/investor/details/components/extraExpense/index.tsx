@@ -1,13 +1,9 @@
-"use client";
-
 import { Button, TableWrapper } from "@/app/components";
-import { useRouter } from "next/navigation";
 import { headTitles } from "./helpers";
+import { useRouter } from "next/navigation";
 
-function ExtraExpenseDetails({ amountID }: any) {
+function ExtraExpense() {
   const router = useRouter();
-
-  // onBasis of AmountID API Call happen
 
   const extraExpenseDetails = [
     {
@@ -33,9 +29,10 @@ function ExtraExpenseDetails({ amountID }: any) {
   }
   return (
     <div>
+      <h1 className="text-[20px] font-bold my-5">Extra Expense</h1>
       <TableWrapper
         headerList={headTitles}
-        items={extraExpenseDetails}
+        items={extraExpenseDetails || []}
         TableRow={TableRow}
         onClickHandler={onClickHandler}
       />
@@ -49,7 +46,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <tr
         className={
           className ||
-          "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+          "even:bg-[#ECEDED] text-center text-[14px] table-fixed table w-full text-black"
         }
       >
         <td className="px-2 py-4">{elem?.extraExpenseID}</td>
@@ -60,7 +57,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         <td className="px-2 py-4">{elem?.otherExpense}</td>
         <td className="px-2 py-4">
           <Button
-            className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+            className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("update", elem)}
           >
             Update
@@ -71,4 +68,4 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
   );
 }
 
-export { ExtraExpenseDetails };
+export { ExtraExpense };

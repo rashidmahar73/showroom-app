@@ -1,27 +1,28 @@
 "use client";
 
-import {
-  InputField,
-  Button,
-  TableWrapper,
-  ConditionalRenderer,
-} from "@/app/components";
+import { Button, TableWrapper, ConditionalRenderer } from "@/app/components";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { headTitles } from "./helpers";
 import { InputGrid } from "../../components";
+import { UseLazyApiCall } from "@/app/hooks";
+import { useRouter } from "next/navigation";
+import { toastTypesKeys } from "@/app/utils/constants";
+import { toastHandler } from "@/app/utils/helpers";
+import { ToastContainer } from "react-toastify";
 
 function AddOrUpdateInvestor() {
   const [investorList, setInvestorList] = useState<any>([]);
   const [investorData, setInvestorData] = useState({
     investor_name: "",
-    // phoneNumber: 0,
+    phone_number: 0,
     investor_cnic: "",
   });
   const [isEdit, setIsEdit] = useState(false);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const isUpdate = pathname?.includes("update");
 
   const encodedData = searchParams.get("data");
@@ -51,25 +52,24 @@ function AddOrUpdateInvestor() {
   function onClickAction() {
     if (isEdit) {
       const updatedInvestorList = investorList.map((elem: any) =>
-        elem.investor_cnic === investorData.investor_cnic ? { ...investorData } : elem
+        elem.investor_cnic === investorData.investor_cnic
+          ? { ...investorData }
+          : elem
       );
       setInvestorList(updatedInvestorList);
       setInvestorData({
         investor_name: "",
-        // phoneNumber: 0,
+        phone_number: 0,
         investor_cnic: "",
       });
       setIsEdit(false);
       return;
     }
-    // const newInvestor = {
-    //   ...investorData,
-    //   investorID: Date.now(),
-    // };
+
     setInvestorList([...investorList, investorData]);
     setInvestorData({
       investor_name: "",
-      // phoneNumber: 0,
+      phone_number: 0,
       investor_cnic: "",
     });
   }
@@ -77,59 +77,71 @@ function AddOrUpdateInvestor() {
   const investorInputItems = [
     {
       type: "text",
-      label: "Investor Name",
+      label: "Name",
       name: "investor_name",
       value: investorData.investor_name,
     },
-    // {
-    //   type: "number",
-    //   label: "Phone Number",
-    //   name: "phoneNumber",
-    //   value: investorData.phoneNumber,
-    // },
     {
       type: "number",
-      label: "investor_cnic",
+      label: "Phone Number",
+      name: "phone_number",
+      value: investorData.phone_number,
+    },
+    {
+      type: "number",
+      label: "CNIC",
       name: "investor_cnic",
       value: investorData.investor_cnic,
     },
   ];
 
+  const [getData, { data: investorsData }] = UseLazyApiCall({
+    url: "users/investors/addInvestors",
+    method: "POST",
+  }) as any;
+
+  const [postInvestorsIDByUsers, { data: investorsByUsers, isLoading }] =
+    UseLazyApiCall({
+      url: "users/investors/byUsers",
+      method: "POST",
+    }) as any;
+
   function onSubmit() {
-    // investorList
-const userId=2011;
+    const newInvestors = {
+      tracking_id: Date.now(),
+      investorsList: investorList,
+    };
 
-    const apiUrl= `http://localhost:3001/users/${userId}/investors`
+    getData({ params: newInvestors });
 
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({investorsList:investorList})
-    })
-    .then(response => {
-      if (!response.ok) {
-        return response.json().then(error => {
-          throw new Error(error.message || 'Something went wrong');
-        });
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Investor added successfully:', data);
-    })
-    .catch(error => {
-      console.error('Error:', error.message);
-    });
+    const investors_add_by_users = {
+      userID: 2015,
+      investors_tracking_id: newInvestors?.tracking_id,
+    };
+
+    postInvestorsIDByUsers({ params: investors_add_by_users });
   }
+
+  useEffect(() => {
+    if (investorsByUsers?.status === 200) {
+      toastHandler(investorsByUsers.message, toastTypesKeys.success);
+      setTimeout(() => {
+        router.push(`/investor`);
+        return;
+      }, 3000);
+    }
+  }, [investorsByUsers]);
+
+  const addHeadTitles = headTitles?.filter((elem, index) => index !== 0);
+  const modifiedHeadTitle = isUpdate ? headTitles : addHeadTitles;
 
   return (
     <div className="mx-20">
+      <ToastContainer />
+      <h1 className="font-bold text-center text-[20px] my-10">
+        {isUpdate ? "Update Investor" : "Add Investor"}
+      </h1>
       <ConditionalRenderer condition={isUpdate}>
-        <h1 className="font-bold text-center text-[20px] my-5">
-          Update Investor
-        </h1>
         <h1 className="font-bold text-[20px] my-5">
           {/* Investor ID {investorData.investorID} */}
         </h1>
@@ -141,25 +153,33 @@ const userId=2011;
       />
       <div className="flex justify-end mt-5">
         <Button
-          className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
+          className="h-[40px] text-white px-3 rounded-[5px] text-[14px] bg-[#2182b0]"
           onClick={onClickAction}
         >
           {isEdit || isUpdate ? "Update" : "Add"}
         </Button>
       </div>
+      
       <ConditionalRenderer condition={!isUpdate}>
-        <div className="border-[1px] border-black rounded-sm mt-5">
+        <h1 className="font-bold text-center text-[20px] my-10">
+          Investor Details
+        </h1>
+      </ConditionalRenderer>
+      <ConditionalRenderer condition={!isUpdate}>
+        <div className="rounded-sm mt-5">
           <TableWrapper
-            headerList={headTitles}
+            headerList={modifiedHeadTitle}
             items={investorList || []}
             TableRow={TableRow}
             onClickHandler={onClickHandler}
           />
         </div>
 
-        <div className="flex justify-end mt-5">
+        <div className="flex w-full mt-5">
           <Button
-            className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
+            className={`${
+              isLoading ? "opacity-40" : "opacity-100"
+            } h-[40px] text-white px-3 rounded-[5px] w-full  text-[14px] my-5 bg-[#2182b0]`}
             onClick={onSubmit}
           >
             Submit
@@ -175,16 +195,18 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center border-b-[#686868] border-b-[2px] text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-2 py-4">{elem?.investorId}</td>
+      <ConditionalRenderer condition={!!elem?.investor_id}>
+        <td className="px-2 py-4">{elem?.investorId}</td>
+      </ConditionalRenderer>
       <td className="px-2 py-4">{elem?.investor_name}</td>
-      <td className="px-2 py-4">{elem?.phoneNumber}</td>
+      <td className="px-2 py-4">{elem?.phone_number}</td>
       <td className="px-2 py-4">{elem?.investor_cnic}</td>
       <td className="px-2 py-4">
         <Button
-          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          className="h-[40px] bg-[#2182b0] text-[14px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("edit", elem)}
         >
           Edit
@@ -192,7 +214,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       </td>
       <td className="px-2 py-4">
         <Button
-          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          className="h-[40px] bg-[#2182b0] text-[14px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("remove", elem)}
         >
           Remove

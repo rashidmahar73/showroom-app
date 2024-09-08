@@ -18,11 +18,15 @@ function UserRegistration({
   }
 
   const [getData, { data: signupData }] = UseLazyApiCall({
-    url: "signup",
+    url: "users/signup",
     method: "POST",
   }) as any;
 
   async function dataCarrier(userData: any) {
+    if(Object.keys(editableData)?.length>0){
+      
+      return;
+    }
     const userDataDetails = {
       name: userData.name,
       email: userData.email,
@@ -44,6 +48,8 @@ function UserRegistration({
       return;
     }
   }, [signupData]);
+
+  console.log(editableData,'isEdit')
 
   return (
     <>
