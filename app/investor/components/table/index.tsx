@@ -1,8 +1,6 @@
-import { Button, ConditionalRenderer } from "@/app/components";
-import { Table } from "@/app/components/tableWrapper/table";
-import { useState } from "react";
-import { AmountDetails } from "../../amountDetails";
 import { useRouter } from "next/navigation";
+import { Table } from "@/app/components/tableWrapper/table";
+import { Button } from "@/app/components";
 import { headTitles } from "./helpers";
 
 function InvestorsTable({ data }: any) {

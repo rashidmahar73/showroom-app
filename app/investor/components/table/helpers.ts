@@ -15,7 +15,7 @@ const headTitles = [
   { id: 4, styling: "w-[8%] text-[15px] text-center", title: "Update" },
   { id: 4, styling: "w-[8%] text-[15px] text-center", title: "Remove" },
   { id: 4, styling: "w-[8%] text-[15px] text-center", title: "Add Amount" },
-  { id: 4, styling: "w-[8%] text-[15px] text-center", title: "Amount Details" },
+  { id: 4, styling: "w-[8%] text-[15px] text-center", title: "Details" },
 ];
 
 const investorData = [
