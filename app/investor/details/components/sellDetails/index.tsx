@@ -42,7 +42,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[14px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED]  border-b-[2px] border-b-[#686868] text-center text-[14px] table-fixed table w-full text-black"
       }
     >
       <td className="px-2 py-4">{elem?.sellID}</td>
