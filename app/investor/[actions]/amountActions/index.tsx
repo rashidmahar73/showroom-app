@@ -95,7 +95,14 @@ function AddOrUpdateAmount() {
   function onSubmit() {}
 
   if (isUpdate) {
-    return <UpdateAmount onClickAmountAction={onClickAmountAction} />;
+    return (
+      <UpdateAmount
+        onClickAmountAction={onClickAmountAction}
+        investorAmountData={investorAmountData}
+        setInvestorAmountData={setInvestorAmountData}
+        amountInputItems={amountInputItems}
+      />
+    );
   }
 
   return (

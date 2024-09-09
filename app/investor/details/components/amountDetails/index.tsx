@@ -1,9 +1,22 @@
 import { Button, ConditionalRenderer, TableWrapper } from "@/app/components";
 import { amountDetails, headTitles, insa } from "./helpers";
+import { useRouter } from "next/navigation";
 
 function AmountDetails() {
+  const router = useRouter();
+
   const removeColumn = headTitles?.filter((elem) => elem.title !== "Purchase");
   const modifedHeadTitles = insa?.length > 1 ? removeColumn : headTitles;
+
+  function onClickHandler(type: any, elem: any) {
+    return () => {
+      if (type === "updateAmount") {
+        const serializedObject = encodeURIComponent(JSON.stringify(elem));
+        router.push(`updateAmount?data=${serializedObject}`);
+        return;
+      }
+    };
+  }
 
   return (
     <>
@@ -12,7 +25,7 @@ function AmountDetails() {
         headerList={modifedHeadTitles}
         items={amountDetails || []}
         TableRow={TableRow}
-        onClickHandler={() => {}}
+        onClickHandler={onClickHandler}
       />
 
       <ConditionalRenderer condition={insa?.length > 1}>

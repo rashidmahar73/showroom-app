@@ -159,13 +159,11 @@ function AddOrUpdateInvestor() {
           {isEdit || isUpdate ? "Update" : "Add"}
         </Button>
       </div>
-      
-      <ConditionalRenderer condition={!isUpdate}>
+
+      <ConditionalRenderer condition={!isUpdate && investorList?.length !== 0}>
         <h1 className="font-bold text-center text-[20px] my-10">
           Investor Details
         </h1>
-      </ConditionalRenderer>
-      <ConditionalRenderer condition={!isUpdate}>
         <div className="rounded-sm mt-5">
           <TableWrapper
             headerList={modifiedHeadTitle}
