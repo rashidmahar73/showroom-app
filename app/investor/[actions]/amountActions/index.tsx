@@ -6,14 +6,16 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { headTitles } from "./helpers";
 import { InputGrid } from "../../components";
 import { InvestorDetails, UpdateAmount } from "./components";
+import { UseLazyApiCall } from "@/app/hooks";
+import { toastHandler } from "@/app/utils/helpers";
+import { toastTypesKeys } from "@/app/utils/constants";
 
 function AddOrUpdateAmount() {
-  const [amountList, setAmountList] = useState<any>([]);
+  const [currentAmountData, setCurrentAmountData] = useState<any>({});
   const [investorAmountData, setInvestorAmountData] = useState({
-    amountID: 0,
-    investorAmount: "",
-    investorAmountType: "",
-    investorAmountDate: "",
+    investor_amount: "",
+    investor_amount_type: "",
+    investor_amount_date: "",
   });
   const [isEdit, setIsEdit] = useState(false);
 
@@ -30,6 +32,21 @@ function AddOrUpdateAmount() {
     if (parsedData && isUpdate) return setInvestorAmountData(parsedData);
   }, []);
 
+  const [getData, { data: addAmount, isLoadingAdd }] = UseLazyApiCall({
+    url: "users/investors/addAmount",
+    method: "POST",
+  }) as any;
+
+  useEffect(() => {
+    if (addAmount?.status === 200) {
+      setInvestorAmountData({
+        investor_amount: "",
+        investor_amount_type: "",
+        investor_amount_date: "",
+      });
+    }
+  }, [addAmount]);
+
   function onClickHandler(type: any, elem: any) {
     return () => {
       if (type === "edit") {
@@ -42,32 +59,14 @@ function AddOrUpdateAmount() {
 
   function onClickAmountAction() {
     if (isEdit) {
-      const updatedAmountList = amountList.map((elem: any) =>
-        elem.amountID === investorAmountData.amountID
-          ? { ...investorAmountData }
-          : elem
-      );
-      setAmountList(updatedAmountList);
-      setInvestorAmountData({
-        amountID: 0,
-        investorAmount: "",
-        investorAmountType: "",
-        investorAmountDate: "",
-      });
       setIsEdit(false);
-      return;
     }
 
-    const newAmountData = {
-      ...investorAmountData,
-      amountID: Date.now(),
-    };
-    setAmountList([newAmountData]);
+    setCurrentAmountData(investorAmountData);
     setInvestorAmountData({
-      amountID: 0,
-      investorAmount: "",
-      investorAmountType: "",
-      investorAmountDate: "",
+      investor_amount: "",
+      investor_amount_type: "",
+      investor_amount_date: "",
     });
   }
 
@@ -75,24 +74,44 @@ function AddOrUpdateAmount() {
     {
       type: "number",
       label: "Investor Amount",
-      name: "investorAmount",
-      value: investorAmountData.investorAmount,
+      name: "investor_amount",
+      value: investorAmountData.investor_amount,
     },
     {
       type: "text",
       label: "Investor Amount Type",
-      name: "investorAmountType",
-      value: investorAmountData.investorAmountType,
+      name: "investor_amount_type",
+      value: investorAmountData.investor_amount_type,
     },
     {
       type: "date",
       label: "Investor Amount Date",
-      name: "investorAmountDate",
-      value: investorAmountData.investorAmountDate,
+      name: "investor_amount_date",
+      value: investorAmountData.investor_amount_date,
     },
   ];
 
-  function onSubmit() {}
+  function onSubmit() {
+    const amountData = {
+      investor_id: 42,
+      ...currentAmountData,
+    };
+    getData({ params: amountData });
+  }
+
+  useEffect(() => {
+    if (addAmount?.status === 200) {
+      toastHandler(addAmount.message, toastTypesKeys.success);
+      setTimeout(() => {
+        setInvestorAmountData({
+          investor_amount: "",
+          investor_amount_type: "",
+          investor_amount_date: "",
+        });
+      }, 3000);
+      return;
+    }
+  }, [addAmount]);
 
   if (isUpdate) {
     return (
@@ -105,6 +124,10 @@ function AddOrUpdateAmount() {
     );
   }
 
+  const addHeadTitles = headTitles?.filter((elem, index) => index !== 0);
+  const modifiedHeadTitle = isUpdate ? headTitles : addHeadTitles;
+
+  //for add below is jsx
   return (
     <div className="mx-20">
       <h1 className="font-bold text-center text-[20px] my-10">
@@ -125,18 +148,21 @@ function AddOrUpdateAmount() {
           {isEdit ? "Update" : "Add"} Amount
         </Button>
       </div>
-      <ConditionalRenderer condition={amountList?.length !== 0}>
+      <ConditionalRenderer
+        condition={Object.keys(currentAmountData)?.length !== 0}
+      >
         <div className="rounded-sm mt-5">
           <TableWrapper
-            headerList={headTitles}
-            items={amountList || []}
+            headerList={modifiedHeadTitle}
+            items={[currentAmountData] || []}
             TableRow={TableRow}
             onClickHandler={onClickHandler}
           />
         </div>
-        <div className="flex w-full mt-5">
+        <div className="flex w-full my-5">
           <Button
-            className="h-[40px] text-white px-3 text-[13px] w-full rounded-[5px] bg-[#2182b0]"
+            className={`${isLoadingAdd ? "opacity-40" : "opacity-100"
+              } h-[40px] text-white px-3 text-[13px] w-full rounded-[5px] bg-[#2182b0]`}
             onClick={onSubmit}
           >
             Submit
@@ -155,10 +181,12 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         "even:bg-[#ECEDED] text-center border-b-[2px] border-b-[#686868] text-[15px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-2 py-4">{elem?.amountID}</td>
-      <td className="px-2 py-4">{elem?.investorAmount}</td>
-      <td className="px-2 py-4">{elem?.investorAmountType}</td>
-      <td className="px-2 py-4">{elem?.investorAmountDate}</td>
+      <ConditionalRenderer condition={!!elem?.amount_id}>
+        <td className="px-2 py-4">{elem?.amount_id}</td>
+      </ConditionalRenderer>
+      <td className="px-2 py-4">{elem?.investor_amount}</td>
+      <td className="px-2 py-4">{elem?.investor_amount_type}</td>
+      <td className="px-2 py-4">{elem?.investor_amount_date}</td>
       <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
