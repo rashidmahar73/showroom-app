@@ -26,7 +26,7 @@ function PurchaseDetails() {
       }
       if (type === "updatePurchase") {
         const serializedObject = encodeURIComponent(JSON.stringify(elem));
-        router.push(`investor/updatePurchase?data=${serializedObject}`);
+        router.push(`updatePurchase?data=${serializedObject}`);
         return;
       }
       if (type === "addSell") {

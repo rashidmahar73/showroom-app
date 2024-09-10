@@ -91,9 +91,11 @@ function AddOrUpdateAmount() {
     },
   ];
 
+  console.log(parsedData,'parsedData')
+
   function onSubmit() {
     const amountData = {
-      investor_id: 42,
+      investor_id: parsedData?.investor_id,
       ...currentAmountData,
     };
     getData({ params: amountData });

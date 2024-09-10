@@ -1,43 +1,37 @@
 import { Button, ConditionalRenderer, TableWrapper } from "@/app/components";
 import { amountDetails, headTitles, insa } from "./helpers";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { UseApiCall, UseLazyApiCall } from "@/app/hooks";
+import { useEffect } from "react";
+import { AmountTable } from "./amountTable";
 
 function AmountDetails() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const encodedData = searchParams.get("data");
+  const parsedData = encodedData
+    ? JSON.parse(decodeURIComponent(encodedData))
+    : null;
 
   const removeColumn = headTitles?.filter((elem) => elem.title !== "Purchase");
   const modifedHeadTitles = insa?.length > 1 ? removeColumn : headTitles;
 
-  function onClickHandler(type: any, elem: any) {
-    return () => {
-      if (type === "updateAmount") {
-        const serializedObject = encodeURIComponent(JSON.stringify(elem));
-        router.push(`updateAmount?data=${serializedObject}`);
-        return;
-      }
-    };
-  }
+
+  const [getData, { data: amountData }] = UseLazyApiCall({
+    url: "users/investors/amountDetails",
+    method: "POST",
+  }) as any;
+
+  useEffect(() => {
+    getData({ params: { investor_ids: parsedData } });
+  }, []);
+
 
   return (
     <>
       <h1 className="text-[20px] font-bold my-5">Amount Details</h1>
-      <TableWrapper
-        headerList={modifedHeadTitles}
-        items={amountDetails || []}
-        TableRow={TableRow}
-        onClickHandler={onClickHandler}
-      />
-
-      <ConditionalRenderer condition={insa?.length > 1}>
-        <div className="flex justify-end my-4">
-          <Button
-            className="h-[30px] my-1 bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-            //   onClick={onClickHandler("addPurchase", elem)}
-          >
-            Add Purchase
-          </Button>
-        </div>
-      </ConditionalRenderer>
+      <AmountTable data={amountData?.data} />
     </>
   );
 }

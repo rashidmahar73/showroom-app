@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { amountHeadTitles, headTitles } from "./helpers";
 import { InputGrid } from "../../components";
+import { UpdatePurchase } from "./updatePurchase";
 
 function AddOrUpdatePurchase() {
   const [purchaseList, setPurchaseList] = useState<any>([]);
@@ -36,10 +37,9 @@ function AddOrUpdatePurchase() {
     ? JSON.parse(decodeURIComponent(encodedData))
     : null;
 
-    console.log({purchaseAmountData})
-
   useEffect(() => {
-    if (isUpdatePurchase && parsedData) return setPurchaseAmountData(parsedData);
+    if (isUpdatePurchase && parsedData)
+      return setPurchaseAmountData(parsedData);
   }, []);
 
   function onClickHandler(type: any, elem: any) {
@@ -131,29 +131,34 @@ function AddOrUpdatePurchase() {
     },
   ];
 
-
   function onSubmit() {}
+
+  if (isUpdate) {
+    return (
+      <UpdatePurchase
+        purchseInputItems={purchseInputItems}
+        setPurchaseAmountData={setPurchaseAmountData}
+        purchaseAmountData={purchaseAmountData}
+        onClickPurchaseAction={onClickPurchaseAction}
+      />
+    );
+  }
+
+  console.log(parsedData?.amount_details, "parsedData");
 
   return (
     <div className="mx-20">
-      {/* <ConditionalRenderer condition={isUpdate}>
-        <h1>{investorAmountData.investorId}</h1>
-      </ConditionalRenderer> */}
-      <ConditionalRenderer condition={!isUpdate && parsedData}>
-        <h1 className="font-bold text-center text-[20px] my-5">
-          Amount Details
-        </h1>
-        <div className="border-[1px] border-black rounded-sm mt-5">
-          <TableWrapper
-            headerList={amountHeadTitles}
-            items={[parsedData] || []}
-            TableRow={AmountTableRow}
-            onClickHandler={() => {}}
-          />
-        </div>
-      </ConditionalRenderer>
+      <h1 className="font-bold text-center text-[20px] my-5">Amount Details</h1>
+      <div className="border-[1px] border-black rounded-sm mt-5">
+        <TableWrapper
+          headerList={amountHeadTitles}
+          items={[parsedData?.amount_details] || []}
+          TableRow={AmountTableRow}
+          onClickHandler={() => {}}
+        />
+      </div>
       <h1 className="font-bold text-center text-[20px] my-5">
-        {isUpdatePurchase ? "Update" : "Enter"} Purchase
+        Purchase Details
       </h1>
       <InputGrid
         items={purchseInputItems}
@@ -162,31 +167,29 @@ function AddOrUpdatePurchase() {
       />
       <div className="flex justify-end mt-5">
         <Button
-          className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
+          className="h-[40px] text-[14px] text-white px-3 rounded-[5px] bg-[#2182b0]"
           onClick={onClickPurchaseAction}
         >
-          {isEdit || isUpdate ? "Update" : "Add"} Purchase
+          Add Purchase
         </Button>
       </div>
-      <ConditionalRenderer condition={!isUpdate}>
-        <div className="border-[1px] border-black rounded-sm mt-5">
-          <TableWrapper
-            headerList={headTitles}
-            items={purchaseList || []}
-            TableRow={TableRow}
-            onClickHandler={onClickHandler}
-          />
-        </div>
+      <div className="border-[1px] border-black rounded-sm mt-5">
+        <TableWrapper
+          headerList={headTitles}
+          items={purchaseList || []}
+          TableRow={TableRow}
+          onClickHandler={onClickHandler}
+        />
+      </div>
 
-        <div className="flex justify-end mt-5">
-          <Button
-            className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
-            onClick={onSubmit}
-          >
-            Submit
-          </Button>
-        </div>
-      </ConditionalRenderer>
+      <div className="flex justify-end my-5">
+        <Button
+          className="h-[40px] text-white text-[14px] px-3 rounded-[5px] bg-[#2182b0]"
+          onClick={onSubmit}
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   );
 }
@@ -195,13 +198,13 @@ function AmountTableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[14px] table-fixed table w-full text-black"
       }
     >
-      <td className="px-2 py-4">{elem?.amountID}</td>
-      <td className="px-2 py-4">{elem?.investorAmount}</td>
-      <td className="px-2 py-4">{elem?.investorAmountType}</td>
-      <td className="px-2 py-4">{elem?.investorAmountDate}</td>
+      <td className="px-2 py-4">{elem?.amount_id}</td>
+      <td className="px-2 py-4">{elem?.investor_amount}</td>
+      <td className="px-2 py-4">{elem?.investor_amount_type}</td>
+      <td className="px-2 py-4">{elem?.investor_amount_date}</td>
     </tr>
   );
 }
