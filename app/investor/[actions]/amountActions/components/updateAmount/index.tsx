@@ -1,5 +1,4 @@
-import { Button } from "@/app/components";
-import { InputGrid } from "@/app/investor/components";
+import { Button, InputGrid } from "@/app/components";
 
 function UpdateAmount({
   investorAmountData,

@@ -14,7 +14,7 @@ function InputGrid({ items = [], setState, state }: any) {
       {items?.map(({ type, label, name, value }: any, index: any) => (
         <div key={`user-registration-${index}`}>
           <InputField
-            parentClass="flex flex-col mt-3"
+            parentClass="flex flex-col mt-2"
             className="h-[40px] border-[1px] w-full border-black rounded-[5px]"
             type={type}
             label={label}

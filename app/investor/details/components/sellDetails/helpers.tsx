@@ -1,5 +1,10 @@
 const headTitles = [
   {
+    id: 1,
+    styling: "w-[8%] text-[14px] text-center",
+    title: "Purchase ID",
+  },
+  {
     id: 2,
     styling: "w-[8%] text-[14px] text-center",
     title: "Sell ID",

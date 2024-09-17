@@ -1,14 +1,19 @@
 "use client";
 
-import { Button, TableWrapper, ConditionalRenderer } from "@/app/components";
+import {
+  Button,
+  TableWrapper,
+  ConditionalRenderer,
+  InputGrid,
+} from "@/app/components";
 import { useState, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { headTitles } from "./helpers";
-import { InputGrid } from "../../components";
 import { InvestorDetails, UpdateAmount } from "./components";
 import { UseLazyApiCall } from "@/app/hooks";
-import { toastHandler } from "@/app/utils/helpers";
+import { hasEmptyString, toastHandler } from "@/app/utils/helpers";
 import { toastTypesKeys } from "@/app/utils/constants";
+import { ToastContainer } from "react-toastify";
 
 function AddOrUpdateAmount() {
   const [currentAmountData, setCurrentAmountData] = useState<any>({});
@@ -19,6 +24,7 @@ function AddOrUpdateAmount() {
   });
   const [isEdit, setIsEdit] = useState(false);
 
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isUpdate = pathname?.includes("updateAmount");
@@ -32,10 +38,11 @@ function AddOrUpdateAmount() {
     if (parsedData && isUpdate) return setInvestorAmountData(parsedData);
   }, []);
 
-  const [getData, { data: addAmount, isLoadingAdd }] = UseLazyApiCall({
-    url: "users/investors/addAmount",
-    method: "POST",
-  }) as any;
+  const [getData, { data: addAmount, isLoading: isLoadingAdd }] =
+    UseLazyApiCall({
+      url: "users/investors/addAmount",
+      method: "POST",
+    }) as any;
 
   useEffect(() => {
     if (addAmount?.status === 200) {
@@ -91,8 +98,6 @@ function AddOrUpdateAmount() {
     },
   ];
 
-  console.log(parsedData,'parsedData')
-
   function onSubmit() {
     const amountData = {
       investor_id: parsedData?.investor_id,
@@ -100,7 +105,7 @@ function AddOrUpdateAmount() {
     };
     getData({ params: amountData });
   }
-
+  
   useEffect(() => {
     if (addAmount?.status === 200) {
       toastHandler(addAmount.message, toastTypesKeys.success);
@@ -110,6 +115,8 @@ function AddOrUpdateAmount() {
           investor_amount_type: "",
           investor_amount_date: "",
         });
+        router.push(`/investor`);
+        return;
       }, 3000);
       return;
     }
@@ -129,9 +136,12 @@ function AddOrUpdateAmount() {
   const addHeadTitles = headTitles?.filter((elem, index) => index !== 0);
   const modifiedHeadTitle = isUpdate ? headTitles : addHeadTitles;
 
+  const isEmptyFields = hasEmptyString(investorAmountData);
+
   //for add below is jsx
   return (
     <div className="mx-20">
+      <ToastContainer />
       <h1 className="font-bold text-center text-[20px] my-10">
         Investor Details
       </h1>
@@ -144,8 +154,12 @@ function AddOrUpdateAmount() {
       />
       <div className="flex justify-end my-5">
         <Button
-          className="h-[40px] text-white text-[13px] px-3 rounded-[5px] bg-[#2182b0]"
-          onClick={onClickAmountAction}
+          className={`h-[40px] ${
+            isEmptyFields
+              ? "opacity-40 cursor-default"
+              : "opacity-100 cursor-pointer"
+          } text-white text-[13px] px-3 rounded-[5px] bg-[#2182b0]`}
+          onClick={isEmptyFields ? () => {} : onClickAmountAction}
         >
           {isEdit ? "Update" : "Add"} Amount
         </Button>
@@ -163,8 +177,9 @@ function AddOrUpdateAmount() {
         </div>
         <div className="flex w-full my-5">
           <Button
-            className={`${isLoadingAdd ? "opacity-40" : "opacity-100"
-              } h-[40px] text-white px-3 text-[13px] w-full rounded-[5px] bg-[#2182b0]`}
+            className={`${
+              isLoadingAdd ? "opacity-40" : "opacity-100"
+            } h-[40px] text-white px-3 text-[13px] w-full rounded-[5px] bg-[#2182b0]`}
             onClick={onSubmit}
           >
             Submit
@@ -180,7 +195,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center border-b-[2px] border-b-[#686868] text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center border-b-[2px] border-b-[#686868] text-[15px] w-full text-black"
       }
     >
       <ConditionalRenderer condition={!!elem?.amount_id}>

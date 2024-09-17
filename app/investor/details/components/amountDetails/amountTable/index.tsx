@@ -3,7 +3,7 @@ import { Button, ConditionalRenderer } from "@/app/components";
 import { headTitles } from "./helpers";
 import React from "react";
 
-function AmountTable({ data }: any) {
+function AmountTable({ data, setView }: any) {
   const router = useRouter();
 
   function onClickHandler(type: any, elem: any) {
@@ -17,6 +17,11 @@ function AmountTable({ data }: any) {
       router.push(`addPurchase?data=${serializedObject}`);
       return;
     }
+
+    if (type === "viewPurchase") {
+      setView(elem);
+      return;
+    }
   }
 
   const modifiedData = data?.map((item: any) => {
@@ -27,6 +32,12 @@ function AmountTable({ data }: any) {
   });
 
   const allAmountIds = modifiedData?.map((elem: any) => elem.amount_id).flat();
+
+  const isMultiplePurchase = data
+    ?.map((elem: any) => {
+      return elem.amountDetails?.map((detail: any) => detail.is_purchase);
+    })
+    ?.flat();
 
   return (
     <>
@@ -61,9 +72,17 @@ function AmountTable({ data }: any) {
                 <div className="flex items-center justify-center cursor-pointer">
                   <Button
                     className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-                    onClick={() => onClickHandler("addPurchase", allAmountIds)}
+                    onClick={() =>
+                      onClickHandler(
+                        isMultiplePurchase?.includes(true)
+                          ? "viewPurchase"
+                          : "addPurchase",
+                        { amount_id: allAmountIds }
+                      )
+                    }
                   >
-                    Add Purchase
+                    {isMultiplePurchase?.includes(true) ? "View" : "Add"}{" "}
+                    Purchase
                   </Button>
                 </div>
               </td>
@@ -112,7 +131,7 @@ function TableRow({
             <td className="px-2 py-4">
               <Button
                 className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-                onClick={() => onClickHandler("updateInvestor", amount)}
+                onClick={() => onClickHandler("updateAmount", amount)}
               >
                 Update
               </Button>
@@ -124,9 +143,17 @@ function TableRow({
                   <div className="flex items-center justify-center cursor-pointer">
                     <Button
                       className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-                      onClick={() => onClickHandler("addPurchase",{amount_id: [amount.amount_id], amount_details:amount})}
+                      onClick={() =>
+                        onClickHandler(
+                          amount?.is_purchase ? "viewPurchase" : "addPurchase",
+                          {
+                            amount_id: [amount.amount_id],
+                            amount_details: amount,
+                          }
+                        )
+                      }
                     >
-                      Add Purchase
+                      {amount?.is_purchase ? "View" : "Add"} Purchase
                     </Button>
                   </div>
                 </td>

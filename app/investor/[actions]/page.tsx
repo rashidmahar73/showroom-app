@@ -9,45 +9,56 @@ import { AddOrUpdateSell } from "./sellActions";
 import { AddOrUpdateExtraExpense } from "./extraResponseActions";
 import withAuth from "@/app/withAuth";
 
+const paths = {
+  investorAdd: "/investor/add",
+  addAmount: "/investor/addAmount",
+  updateAmount: "/investor/updateAmount",
+  addSell: "/investor/addSell",
+  addPurchase: "/investor/addPurchase",
+  updatePurchase: "/investor/updatePurchase",
+  updateSell: "/investor/updateSell",
+  extraExpense: "/investor/extraExpense",
+  updateExtraExpense: "/investor/updateExtraExpense",
+};
+
 function Actions() {
   const pathname = usePathname();
-  const isAddAmount = pathname?.includes("addAmount");
-  const isAddSell = pathname?.includes("addSell");
-  const isAddPurchase = pathname?.includes("addPurchase");
-  const isUpdateAmount = pathname?.includes("updateAmount");
-  const isupdatePurchase = pathname?.includes("updatePurchase");
-  const isUpdateSell = pathname?.includes("updateSell");
-  const isAddExtraExpense = pathname?.includes("extraExpense");
-  const isUpdateExtraExpense = pathname?.includes("updateExtraExpense");
 
   return (
     <div>
-      <ConditionalRenderer
-        condition={
-          !isAddAmount &&
-          !isAddPurchase &&
-          !isUpdateAmount &&
-          !isupdatePurchase &&
-          !isAddSell &&
-          !isUpdateSell &&
-          !isAddExtraExpense &&
-          !isUpdateExtraExpense
-        }
-      >
+      <ConditionalRenderer condition={paths?.investorAdd === pathname}>
         <AddOrUpdateInvestor />
       </ConditionalRenderer>
-      <ConditionalRenderer condition={isAddAmount || isUpdateAmount}>
+
+      <ConditionalRenderer
+        condition={
+          paths?.addAmount === pathname || paths?.updateAmount === pathname
+        }
+      >
         <AddOrUpdateAmount />
       </ConditionalRenderer>
 
-      <ConditionalRenderer condition={isAddPurchase || isupdatePurchase}>
+      <ConditionalRenderer
+        condition={
+          paths?.addPurchase === pathname || paths?.updatePurchase === pathname
+        }
+      >
         <AddOrUpdatePurchase />
       </ConditionalRenderer>
-      <ConditionalRenderer condition={isAddSell || isUpdateSell}>
+
+      <ConditionalRenderer
+        condition={
+          paths?.addSell === pathname || paths?.updateSell === pathname
+        }
+      >
         <AddOrUpdateSell />
       </ConditionalRenderer>
+
       <ConditionalRenderer
-        condition={isAddExtraExpense || isUpdateExtraExpense}
+        condition={
+          paths?.extraExpense === pathname ||
+          paths?.updateExtraExpense === pathname
+        }
       >
         <AddOrUpdateExtraExpense />
       </ConditionalRenderer>

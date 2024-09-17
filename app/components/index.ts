@@ -6,4 +6,5 @@ export * from "./conditionalRenderer";
 export * from "./selectInput";
 export * from "./debounce";
 export * from "./tableWrapper";
+export * from "./inputGrid";
 

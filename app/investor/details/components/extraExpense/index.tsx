@@ -1,20 +1,22 @@
 import { Button, TableWrapper } from "@/app/components";
 import { headTitles } from "./helpers";
 import { useRouter } from "next/navigation";
+import { UseLazyApiCall } from "@/app/hooks";
+import { useEffect } from "react";
 
-function ExtraExpense() {
+function ExtraExpense({view}:any) {
   const router = useRouter();
 
-  const extraExpenseDetails = [
-    {
-      extraExpenseID: 0,
-      workshopName: "Honda",
-      dateModified: "2024-10-10",
-      totalExpense: 12312312,
-      detail: 87787,
-      otherExpense: 877887,
-    },
-  ];
+  const [getData, { data: extraExpenseDetail }] = UseLazyApiCall({
+    url: "users/investors/extraExpenseDetails",
+    method: "POST",
+  }) as any;
+
+  useEffect(() => {
+    getData({ params: { purchase_id: view?.purchase_id } });
+  }, []);
+
+  console.log(view,'View')
 
   function onClickHandler(type: any, elem: any) {
     return () => {
@@ -32,7 +34,7 @@ function ExtraExpense() {
       <h1 className="text-[20px] font-bold my-5">Extra Expense</h1>
       <TableWrapper
         headerList={headTitles}
-        items={extraExpenseDetails || []}
+        items={extraExpenseDetail?.data || []}
         TableRow={TableRow}
         onClickHandler={onClickHandler}
       />
@@ -46,15 +48,16 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <tr
         className={
           className ||
-          "even:bg-[#ECEDED]  border-b-[2px] border-b-[#686868] text-center text-[14px] table-fixed table w-full text-black"
+          "even:bg-[#ECEDED]  border-b-[2px] border-b-[#686868] text-center text-[14px] w-full text-black"
         }
       >
-        <td className="px-2 py-4">{elem?.extraExpenseID}</td>
-        <td className="px-2 py-4">{elem?.workshopName}</td>
-        <td className="px-2 py-4">{elem?.dateModified}</td>
-        <td className="px-2 py-4">{elem?.totalExpense}</td>
+        <td className="px-2 py-4">{elem?.purchase_id}</td>
+        <td className="px-2 py-4">{elem?.extra_expense_id}</td>
+        <td className="px-2 py-4">{elem?.workshop_name}</td>
+        <td className="px-2 py-4">{elem?.date_modified}</td>
+        <td className="px-2 py-4">{elem?.total_expense}</td>
         <td className="px-2 py-4">{elem?.detail}</td>
-        <td className="px-2 py-4">{elem?.otherExpense}</td>
+        <td className="px-2 py-4">{elem?.other_expense}</td>
         <td className="px-2 py-4">
           <Button
             className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"

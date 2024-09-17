@@ -2,6 +2,11 @@ const headTitles = [
   {
     id: 0,
     styling: "w-[8%] text-[14px] text-center",
+    title: "Purchase ID",
+  },
+  {
+    id: 0,
+    styling: "w-[8%] text-[14px] text-center",
     title: "Extra Expense ID",
   },
   {

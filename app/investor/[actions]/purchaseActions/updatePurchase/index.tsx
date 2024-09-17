@@ -1,5 +1,4 @@
-import { Button } from "@/app/components";
-import { InputGrid } from "@/app/investor/components";
+import { Button, InputGrid } from "@/app/components";
 
 function UpdatePurchase({
   purchseInputItems,
@@ -8,7 +7,7 @@ function UpdatePurchase({
   onClickPurchaseAction
 }: any) {
   return (
-    <div>
+    <div className="mx-20">
       <h1 className="font-bold text-center text-[20px] my-5">
         Update Purchase
       </h1>

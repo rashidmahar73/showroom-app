@@ -16,7 +16,7 @@ export function UseApiCall({ url, method, paramsData = {} }: any) {
       });
       setData(data);
     } catch (error) {
-      //   setError(error);
+        setError(error);
     } finally {
       setIsLoading(false);
     }

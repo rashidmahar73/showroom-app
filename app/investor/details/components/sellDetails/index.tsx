@@ -1,10 +1,21 @@
 import { Button, TableWrapper } from "@/app/components";
 import { headTitles } from "./helpers";
 import { useRouter } from "next/navigation";
+import { UseLazyApiCall } from "@/app/hooks";
+import { useEffect } from "react";
 
-function SellDetails() {
+function SellDetails({ view }: any) {
   const router = useRouter();
   // purchaseID API Call Happen
+
+  const [getData, { data: sellDetail }] = UseLazyApiCall({
+    url: "users/investors/sellDetail",
+    method: "POST",
+  }) as any;
+
+  useEffect(() => {
+    getData({ params: { purchase_id: view?.purchase_id } });
+  }, []);
 
   const purchaseDetails = [
     {
@@ -24,12 +35,13 @@ function SellDetails() {
       }
     };
   }
+
   return (
     <div>
       <h1 className="text-[20px] font-bold my-5">Sell</h1>
       <TableWrapper
         headerList={headTitles}
-        items={purchaseDetails || []}
+        items={sellDetail?.data || []}
         TableRow={TableRow}
         onClickHandler={onClickHandler}
       />
@@ -42,14 +54,15 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED]  border-b-[2px] border-b-[#686868] text-center text-[14px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED]  border-b-[2px] border-b-[#686868] text-center text-[14px] w-full text-black"
       }
     >
-      <td className="px-2 py-4">{elem?.sellID}</td>
-      <td className="px-2 py-4">{elem?.sellBy}</td>
-      <td className="px-2 py-4">{elem?.sellAmount}</td>
-      <td className="px-2 py-4">{elem?.sellingDate}</td>
-      <td className="px-2 py-4">{elem?.sellingPrice}</td>
+      <td className="px-2 py-4">{elem?.purchase_id}</td>
+      <td className="px-2 py-4">{elem?.sell_id}</td>
+      <td className="px-2 py-4">{elem?.sell_by}</td>
+      <td className="px-2 py-4">{elem?.sell_amount}</td>
+      <td className="px-2 py-4">{elem?.selling_date}</td>
+      <td className="px-2 py-4">{elem?.selling_price}</td>
       <td className="px-2 py-4">
         <Button
           className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"

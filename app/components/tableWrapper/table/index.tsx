@@ -1,12 +1,12 @@
 function Table({ children }: any) {
-  return <table className="table-auto">{children}</table>;
+  return <table className="w-full border-collapse">{children}</table>;
 }
 
 function Head({ children }: any) {
   return (
     <thead className="break-words w-full">
       {" "}
-      <tr className="table-fixed table bg-[#ECEDED] w-full">{children}</tr>
+      <tr className="bg-[#ECEDED] w-full">{children}</tr>
     </thead>
   );
 }
@@ -16,7 +16,7 @@ function THead({ title, styling }: any) {
 }
 
 function Body({ children }: any) {
-  return <tbody className="break-words w-full">{children}</tbody>;
+  return <tbody>{children}</tbody>;
 }
 
 Table.Head = Head;

@@ -13,8 +13,8 @@ function TableWrapper({ headerList, items, TableRow, onClickHandler=()=>{} }: an
         ))}
       </Table.Head>
       <Table.Body>
-        {items?.map((elem: any, index: number) => (
-          <TableRow key={`table-row-${index}`} elem={elem} onClickHandler={onClickHandler}></TableRow>
+        {items?.map((elem: any, idx: number) => (
+          <TableRow key={`table-row-${idx}`} index={idx} elem={elem} onClickHandler={onClickHandler}/>
         ))}
       </Table.Body>
     </Table>

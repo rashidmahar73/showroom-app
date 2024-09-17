@@ -1,35 +1,37 @@
 "use client";
 
 import {
-  InputField,
   Button,
-  TableWrapper,
   ConditionalRenderer,
+  TableWrapper,
+  InputGrid,
 } from "@/app/components";
 import { useState, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { amountHeadTitles, headTitles } from "./helpers";
-import { InputGrid } from "../../components";
 import { UpdatePurchase } from "./updatePurchase";
+import { UseLazyApiCall } from "@/app/hooks";
+import { hasEmptyString, toastHandler } from "@/app/utils/helpers";
+import { toastTypesKeys } from "@/app/utils/constants";
+import { ToastContainer } from "react-toastify";
 
 function AddOrUpdatePurchase() {
   const [purchaseList, setPurchaseList] = useState<any>([]);
   const [purchaseAmountData, setPurchaseAmountData] = useState({
-    amountID: 0,
-    purchaseID: 0,
-    vehicleCompany: "",
-    vehicleType: "",
-    vehicleRegistrationNo: "",
-    vehicleChasesNo: "",
-    vehicleModel: "",
-    vehicleMeterReading: "",
-    purchaseDate: "",
+    purchase_id: 0,
+    vehicle_company: "",
+    vehicle_type: "",
+    vehicle_registration_no: "",
+    vehicle_chases_no: "",
+    vehicle_model: "",
+    vehicle_meter_reading: "",
+    purchase_date: "",
   });
   const [isEdit, setIsEdit] = useState(false);
 
+  const router=useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isUpdate = pathname?.includes("update");
   const isUpdatePurchase = pathname?.includes("updatePurchase");
 
   const encodedData = searchParams.get("data");
@@ -42,6 +44,12 @@ function AddOrUpdatePurchase() {
       return setPurchaseAmountData(parsedData);
   }, []);
 
+  const [getData, { data: addPurchaseData, isLoading: addIsLoading }] =
+    UseLazyApiCall({
+      url: "users/investors/addPurchase",
+      method: "POST",
+    }) as any;
+
   function onClickHandler(type: any, elem: any) {
     return () => {
       setPurchaseAmountData(elem);
@@ -52,21 +60,20 @@ function AddOrUpdatePurchase() {
   function onClickPurchaseAction() {
     if (isEdit) {
       const updatedPurchaseList = purchaseList.map((elem: any) =>
-        elem.purchaseID === purchaseAmountData.purchaseID
+        elem.purchase_id === purchaseAmountData.purchase_id
           ? { ...purchaseAmountData }
           : elem
       );
       setPurchaseList(updatedPurchaseList);
       setPurchaseAmountData({
-        amountID: 0,
-        purchaseID: 0,
-        vehicleCompany: "",
-        vehicleType: "",
-        vehicleRegistrationNo: "",
-        vehicleChasesNo: "",
-        vehicleModel: "",
-        vehicleMeterReading: "",
-        purchaseDate: "",
+        purchase_id: 0,
+        vehicle_company: "",
+        vehicle_type: "",
+        vehicle_registration_no: "",
+        vehicle_chases_no: "",
+        vehicle_model: "",
+        vehicle_meter_reading: "",
+        purchase_date: "",
       });
       setIsEdit(false);
       return;
@@ -74,15 +81,14 @@ function AddOrUpdatePurchase() {
 
     setPurchaseList([purchaseAmountData]);
     setPurchaseAmountData({
-      amountID: 0,
-      purchaseID: 0,
-      vehicleCompany: "",
-      vehicleType: "",
-      vehicleRegistrationNo: "",
-      vehicleChasesNo: "",
-      vehicleModel: "",
-      vehicleMeterReading: "",
-      purchaseDate: "",
+      purchase_id: 0,
+      vehicle_company: "",
+      vehicle_type: "",
+      vehicle_registration_no: "",
+      vehicle_chases_no: "",
+      vehicle_model: "",
+      vehicle_meter_reading: "",
+      purchase_date: "",
     });
   }
 
@@ -90,50 +96,76 @@ function AddOrUpdatePurchase() {
     {
       type: "text",
       label: "Vehicle Company",
-      name: "vehicleCompany",
-      value: purchaseAmountData.vehicleCompany,
+      name: "vehicle_company",
+      value: purchaseAmountData.vehicle_company,
     },
     {
       type: "text",
       label: "Vehicle Type",
-      name: "vehicleType",
-      value: purchaseAmountData.vehicleType,
+      name: "vehicle_type",
+      value: purchaseAmountData.vehicle_type,
     },
     {
       type: "number",
       label: "Vehicle Registration No.",
-      name: "vehicleRegistrationNo",
-      value: purchaseAmountData.vehicleRegistrationNo,
+      name: "vehicle_registration_no",
+      value: purchaseAmountData.vehicle_registration_no,
     },
     {
       type: "number",
       label: "Vehicle Chases No.",
-      name: "vehicleChasesNo",
-      value: purchaseAmountData.vehicleChasesNo,
+      name: "vehicle_chases_no",
+      value: purchaseAmountData.vehicle_chases_no,
     },
     {
       type: "text",
       label: "Vehicle Model",
-      name: "vehicleModel",
-      value: purchaseAmountData.vehicleModel,
+      name: "vehicle_model",
+      value: purchaseAmountData.vehicle_model,
     },
     {
       type: "number",
       label: "Vehicle Meter Reading",
-      name: "vehicleMeterReading",
-      value: purchaseAmountData.vehicleMeterReading,
+      name: "vehicle_meter_reading",
+      value: purchaseAmountData.vehicle_meter_reading,
     },
     {
       type: "date",
       label: "Purchase Date",
-      name: "purchaseDate",
-      value: purchaseAmountData.purchaseDate,
+      name: "purchase_date",
+      value: purchaseAmountData.purchase_date,
     },
   ];
 
-  function onSubmit() {}
+  function onSubmit() {
+    const purchaseDataObj = purchaseList?.find((item: any) => item);
 
-  if (isUpdate) {
+    const modifiedPurchasedDate = {
+      amount_id: parsedData?.amount_id,
+      vehicle_company: purchaseDataObj?.vehicle_company,
+      vehicle_type: purchaseDataObj?.vehicle_type,
+      vehicle_registration_no: purchaseDataObj?.vehicle_registration_no,
+      vehicle_chases_no: purchaseDataObj?.vehicle_chases_no,
+      vehicle_model: purchaseDataObj?.vehicle_model,
+      vehicle_meter_reading: purchaseDataObj?.vehicle_meter_reading,
+      purchase_date: purchaseDataObj?.purchase_date,
+    };
+
+    getData({ params: modifiedPurchasedDate });
+  }
+
+  useEffect(() => {
+    if (addPurchaseData?.status === 200) {
+      toastHandler(addPurchaseData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        router.push(`/investor`);
+        return;
+      }, 3000);
+      return;
+    }
+  }, [addPurchaseData]);
+
+  if (isUpdatePurchase) {
     return (
       <UpdatePurchase
         purchseInputItems={purchseInputItems}
@@ -144,10 +176,16 @@ function AddOrUpdatePurchase() {
     );
   }
 
-  console.log(parsedData?.amount_details, "parsedData");
+  const addHeadTitles = headTitles?.filter(
+    (elem, index) => index !== 0 && index !== 1
+  );
+  const modifiedHeadTitle = isUpdatePurchase ? headTitles : addHeadTitles;
+
+  const isEmptyFields = hasEmptyString(purchaseAmountData);
 
   return (
     <div className="mx-20">
+      <ToastContainer />
       <h1 className="font-bold text-center text-[20px] my-5">Amount Details</h1>
       <div className="border-[1px] border-black rounded-sm mt-5">
         <TableWrapper
@@ -157,7 +195,7 @@ function AddOrUpdatePurchase() {
           onClickHandler={() => {}}
         />
       </div>
-      <h1 className="font-bold text-center text-[20px] my-5">
+      <h1 className="font-bold text-center text-[20px] my-7">
         Purchase Details
       </h1>
       <InputGrid
@@ -167,29 +205,39 @@ function AddOrUpdatePurchase() {
       />
       <div className="flex justify-end mt-5">
         <Button
-          className="h-[40px] text-[14px] text-white px-3 rounded-[5px] bg-[#2182b0]"
-          onClick={onClickPurchaseAction}
+          className={`h-[40px] ${
+            isEmptyFields
+              ? "opacity-40 cursor-default"
+              : "opacity-100 cursor-pointer"
+          } text-[14px] text-white px-3 rounded-[5px] bg-[#2182b0]`}
+          onClick={isEmptyFields ? () => {} : onClickPurchaseAction}
         >
-          Add Purchase
+          {isEdit ? "Update" : "Add"} Purchase
         </Button>
       </div>
-      <div className="border-[1px] border-black rounded-sm mt-5">
-        <TableWrapper
-          headerList={headTitles}
-          items={purchaseList || []}
-          TableRow={TableRow}
-          onClickHandler={onClickHandler}
-        />
-      </div>
+      <ConditionalRenderer condition={purchaseList?.length > 0}>
+        <div className="border-[1px] border-black rounded-sm mt-5">
+          <TableWrapper
+            headerList={modifiedHeadTitle}
+            items={purchaseList || []}
+            TableRow={TableRow}
+            onClickHandler={onClickHandler}
+          />
+        </div>
 
-      <div className="flex justify-end my-5">
-        <Button
-          className="h-[40px] text-white text-[14px] px-3 rounded-[5px] bg-[#2182b0]"
-          onClick={onSubmit}
-        >
-          Submit
-        </Button>
-      </div>
+        <div className="flex w-full my-5">
+          <Button
+            className={`${
+              addIsLoading
+                ? "opcaity-40 cursor-default"
+                : "opacity-100 cursor-pointer"
+            } h-[40px] text-white text-[14px] w-full px-3 rounded-[5px] bg-[#2182b0]`}
+            onClick={onSubmit}
+          >
+            Submit
+          </Button>
+        </div>
+      </ConditionalRenderer>
     </div>
   );
 }
@@ -198,7 +246,7 @@ function AmountTableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[14px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[14px] w-full text-black"
       }
     >
       <td className="px-2 py-4">{elem?.amount_id}</td>
@@ -214,17 +262,18 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[15px] w-full text-black"
       }
     >
-      <td className="px-2 py-4">{elem?.amountID}</td>
-      <td className="px-2 py-4">{elem?.purchaseID}</td>
-      <td className="px-2 py-4">{elem?.vehicleCompany}</td>
-      <td className="px-2 py-4">{elem?.vehicleType}</td>
-      <td className="px-2 py-4">{elem?.vehicleRegistrationNo}</td>
-      <td className="px-2 py-4">{elem?.vehicleChasesNo}</td>
-      <td className="px-2 py-4">{elem?.vehicleModel}</td>
-      <td className="px-2 py-4">{elem?.vehicleMeterReading}</td>
+      {/* <td className="px-2 py-4">{elem?.amount_id}</td>
+      <td className="px-2 py-4">{elem?.purchase_id}</td> */}
+      <td className="px-2 py-4">{elem?.vehicle_company}</td>
+      <td className="px-2 py-4">{elem?.vehicle_type}</td>
+      <td className="px-2 py-4">{elem?.vehicle_registration_no}</td>
+      <td className="px-2 py-4">{elem?.vehicle_chases_no}</td>
+      <td className="px-2 py-4">{elem?.vehicle_model}</td>
+      <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
+      <td className="px-2 py-4">{elem?.purchase_date}</td>
       <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"

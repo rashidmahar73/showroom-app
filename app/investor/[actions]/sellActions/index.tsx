@@ -4,25 +4,29 @@ import {
   Button,
   TableWrapper,
   ConditionalRenderer,
+  InputGrid,
 } from "@/app/components";
 import { useState, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { purchaseHeadTitles, headTitles } from "./helpers";
-import { InputGrid } from "../../components";
+import { UpdateSell } from "./updateSell";
+import { UseLazyApiCall } from "@/app/hooks";
+import { hasEmptyString, toastHandler } from "@/app/utils/helpers";
+import { toastTypesKeys } from "@/app/utils/constants";
+import { ToastContainer } from "react-toastify";
 
 function AddOrUpdateSell() {
   const [sellList, setSellList] = useState<any>([]);
   const [sellData, setSellData] = useState({
-    amountID: 0,
-    purchaseID: 0,
-    sellID: 0,
-    sellBy: "",
-    sellingDate: "",
-    sellingPrice: "",
-    sellAmount: "",
+    sell_id: 0,
+    sell_by: "",
+    selling_date: "",
+    selling_price: "",
+    sell_amount: "",
   });
   const [isEdit, setIsEdit] = useState(false);
 
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isUpdate = pathname?.includes("update");
@@ -34,9 +38,13 @@ function AddOrUpdateSell() {
     : null;
 
   useEffect(() => {
-    if (isUpdatePurchase && parsedData)
-      return setSellData(parsedData);
+    if (isUpdatePurchase && parsedData) return setSellData(parsedData);
   }, []);
+
+  const [getData, { data: addSellData }] = UseLazyApiCall({
+    url: "users/investors/addSell",
+    method: "POST",
+  }) as any;
 
   function onClickHandler(type: any, elem: any) {
     return () => {
@@ -45,22 +53,18 @@ function AddOrUpdateSell() {
     };
   }
 
-  function onClickPurchaseAction() {
+  function onClickSellAction() {
     if (isEdit) {
       const updatedSellList = sellList.map((elem: any) =>
-        elem.sellID === sellData.sellID
-          ? { ...sellData }
-          : elem
+        elem.sell_id === sellData.sell_id ? { ...sellData } : elem
       );
       setSellList(updatedSellList);
       setSellData({
-        amountID: 0,
-        purchaseID: 0,
-        sellID:0,
-        sellBy: "",
-        sellingDate: "",
-        sellingPrice: "",
-        sellAmount: "",
+        sell_id: 0,
+        sell_by: "",
+        selling_date: "",
+        selling_price: "",
+        sell_amount: "",
       });
       setIsEdit(false);
       return;
@@ -68,100 +72,134 @@ function AddOrUpdateSell() {
 
     const newSellData = {
       ...sellData,
-      sellID: Date.now(),
     };
     setSellList([newSellData]);
     setSellData({
-      amountID: 0,
-      purchaseID: 0,
-      sellID:0,
-      sellBy: "",
-      sellingDate: "",
-      sellingPrice: "",
-      sellAmount: "",
+      sell_id: 0,
+      sell_by: "",
+      selling_date: "",
+      selling_price: "",
+      sell_amount: "",
     });
   }
 
-console.log({sellList})
-
-  const purchseInputItems = [
+  const sellInputItems = [
     {
       type: "text",
       label: "Sell By",
-      name: "sellBy",
-      value: sellData.sellBy,
+      name: "sell_by",
+      value: sellData.sell_by,
     },
     {
       type: "date",
       label: "Selling Date",
-      name: "sellingDate",
-      value: sellData.sellingDate,
+      name: "selling_date",
+      value: sellData.selling_date,
     },
     {
       type: "number",
       label: "Selling Price",
-      name: "sellingPrice",
-      value: sellData.sellingPrice,
+      name: "selling_price",
+      value: sellData.selling_price,
     },
 
     {
       type: "number",
       label: "Sell Amount",
-      name: "sellAmount",
-      value: sellData.sellAmount,
+      name: "sell_amount",
+      value: sellData.sell_amount,
     },
   ];
 
-  function onSubmit() {}
+  function onSubmit() {
+    const sellDataObj = sellList?.find((item: any) => item);
 
+    const modifiedSellData = {
+      purchase_id: parsedData?.purchase_id,
+      sell_by: sellDataObj?.sell_by,
+      selling_date: sellDataObj?.selling_date,
+      selling_price: sellDataObj?.selling_price,
+      sell_amount: sellDataObj?.sell_amount,
+    };
+    getData({ params: modifiedSellData });
+    // sell add api call
+  }
+
+  useEffect(() => {
+    if (addSellData?.status === 200) {
+      toastHandler(addSellData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        router.push(`/investor`);
+        return;
+      }, 3000);
+      return;
+    }
+  }, [addSellData]);
+
+  if (isUpdate) {
+    return (
+      <UpdateSell
+        sellInputItems={sellInputItems}
+        setSellData={setSellData}
+        sellData={sellData}
+        onClickSellAction={onClickSellAction}
+      />
+    );
+  }
+
+  const addHeadTitles = headTitles?.filter(
+    (elem, index) => index !== 0 && index !== 1
+  );
+  const modifiedHeadTitle = isUpdate ? headTitles : addHeadTitles;
+
+  const isEmptyFields = hasEmptyString(sellData);
 
   return (
     <div className="mx-20">
-      {/* <ConditionalRenderer condition={isUpdate}>
-        <h1>{investorAmountData.investorId}</h1>
-      </ConditionalRenderer> */}
-      <ConditionalRenderer condition={!isUpdate && parsedData}>
-        <h1 className="font-bold text-center text-[20px] my-5">
-          Amount Details
-        </h1>
-        <div className="border-[1px] border-black rounded-sm mt-5">
-          <TableWrapper
-            headerList={purchaseHeadTitles}
-            items={[parsedData] || []}
-            TableRow={PurchaseTableRow}
-            onClickHandler={() => {}}
-          />
-        </div>
-      </ConditionalRenderer>
+      <ToastContainer />
       <h1 className="font-bold text-center text-[20px] my-5">
-        {isUpdatePurchase ? "Update" : "Enter"} Sell
+        Purchase Details
       </h1>
+      <div className="border-[1px] border-black rounded-sm mt-5">
+        <TableWrapper
+          headerList={purchaseHeadTitles}
+          items={[parsedData] || []}
+          TableRow={PurchaseTableRow}
+          onClickHandler={() => {}}
+        />
+      </div>
+      <h1 className="font-bold text-center text-[20px] my-5">Enter Sell</h1>
       <InputGrid
-        items={purchseInputItems}
+        items={sellInputItems}
         setState={setSellData}
         state={sellData}
       />
       <div className="flex justify-end mt-5">
         <Button
-          className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
-          onClick={onClickPurchaseAction}
+          className={`h-[40px] text-[15px] ${
+            isEmptyFields
+              ? "opacity-40 cursor-default"
+              : "opacity-100 cursor-pointer"
+          } text-white px-3 rounded-[5px] bg-[#2182b0]`}
+          onClick={onClickSellAction}
         >
-          {isEdit || isUpdate ? "Update" : "Add"} Sell
+          {isEdit ? "Update" : "Add"} Sell
         </Button>
       </div>
-      <ConditionalRenderer condition={!isUpdate}>
+
+      <ConditionalRenderer condition={sellList?.length > 0}>
         <div className="border-[1px] border-black rounded-sm mt-5">
           <TableWrapper
-            headerList={headTitles}
+            headerList={modifiedHeadTitle}
             items={sellList || []}
             TableRow={TableRow}
             onClickHandler={onClickHandler}
           />
         </div>
 
-        <div className="flex justify-end mt-5">
+        <div className="flex w-full my-5">
           <Button
-            className="h-[40px] text-white px-3 rounded-[5px] bg-[#2182b0]"
+            className="h-[40px] w-full text-white px-3 rounded-[5px] bg-[#2182b0]"
             onClick={onSubmit}
           >
             Submit
@@ -176,17 +214,16 @@ function PurchaseTableRow({ elem, className = "" }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[15px] w-full text-black"
       }
     >
-     <td className="px-2 py-4">{elem?.amountID}</td>
-      <td className="px-2 py-4">{elem?.purchaseID}</td>
-      <td className="px-2 py-4">{elem?.vehicleCompany}</td>
-      <td className="px-2 py-4">{elem?.vehicleType}</td>
-      <td className="px-2 py-4">{elem?.vehicleRegistrationNo}</td>
-      <td className="px-2 py-4">{elem?.vehicleChasesNo}</td>
-      <td className="px-2 py-4">{elem?.vehicleModel}</td>
-      <td className="px-2 py-4">{elem?.vehicleMeterReading}</td>
+      <td className="px-2 py-4">{elem?.purchase_id}</td>
+      <td className="px-2 py-4">{elem?.vehicle_company}</td>
+      <td className="px-2 py-4">{elem?.vehicle_type}</td>
+      <td className="px-2 py-4">{elem?.vehicle_registration_no}</td>
+      <td className="px-2 py-4">{elem?.vehicle_chases_no}</td>
+      <td className="px-2 py-4">{elem?.vehicle_model}</td>
+      <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
     </tr>
   );
 }
@@ -196,16 +233,13 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[15px] table-fixed table w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[15px] w-full text-black"
       }
     >
-      <td className="px-2 py-4">{elem?.amountID}</td>
-      <td className="px-2 py-4">{elem?.purchaseID}</td>
-      <td className="px-2 py-4">{elem?.sellID}</td>
-      <td className="px-2 py-4">{elem?.sellAmount}</td>
-      <td className="px-2 py-4">{elem?.sellBy}</td>
-      <td className="px-2 py-4">{elem?.sellingDate}</td>
-      <td className="px-2 py-4">{elem?.sellingPrice}</td>
+      <td className="px-2 py-4">{elem?.sell_amount}</td>
+      <td className="px-2 py-4">{elem?.sell_by}</td>
+      <td className="px-2 py-4">{elem?.selling_date}</td>
+      <td className="px-2 py-4">{elem?.selling_price}</td>
       <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
