@@ -26,7 +26,7 @@ function SelectInput({
   }
 
   return (
-    <div className={className.parent}>
+    <div className="flex flex-col rounded-[5px]">
       <label className={className.labelClassName}>{label}</label>
       <div className="relative">
         <InputHead

@@ -1,11 +1,9 @@
-import { Button, TableWrapper } from "@/app/components";
+import { TableWrapper } from "@/app/components";
 import { headTitles } from "./helpers";
-import { useRouter } from "next/navigation";
 import { UseLazyApiCall } from "@/app/hooks";
 import { useEffect } from "react";
 
 function SellDetails({ view }: any) {
-  const router = useRouter();
   // purchaseID API Call Happen
 
   const [getData, { data: sellDetail }] = UseLazyApiCall({
@@ -14,25 +12,16 @@ function SellDetails({ view }: any) {
   }) as any;
 
   useEffect(() => {
-    getData({ params: { purchase_id: view?.purchase_id } });
+    getData({ params: { purchase_id: view?.sell_id } });
   }, []);
 
-  const purchaseDetails = [
-    {
-      sellID: 0,
-      sellBy: "Ahmad",
-      sellAmount: 12312312,
-      sellingDate: "2024-10-10",
-      sellingPrice: 877887,
-    },
-  ];
   function onClickHandler(type: any, elem: any) {
     return () => {
-      if (type === "updateSell") {
-        const serializedObject = encodeURIComponent(JSON.stringify(elem));
-        router.push(`investor/updateSell?data=${serializedObject}`);
-        return;
-      }
+      // if (type === "updateSell") {
+      //   const serializedObject = encodeURIComponent(JSON.stringify(elem));
+      //   router.push(`investor/updateSell?data=${serializedObject}`);
+      //   return;
+      // }
     };
   }
 
@@ -63,14 +52,14 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-2 py-4">{elem?.sell_amount}</td>
       <td className="px-2 py-4">{elem?.selling_date}</td>
       <td className="px-2 py-4">{elem?.selling_price}</td>
-      <td className="px-2 py-4">
+      {/* <td className="px-2 py-4">
         <Button
           className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
           onClick={onClickHandler("updateSell", elem)}
         >
           Update
         </Button>
-      </td>
+      </td> */}
     </tr>
   );
 }

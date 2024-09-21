@@ -68,7 +68,6 @@ function Form({ dataCarrier, editableData }: any) {
         {userItems?.map(({ type, label, name, value }, index) => (
           <div key={`user-registration-${index}`}>
             <InputField
-              parentClass="flex flex-col"
               className="h-[40px] border-[1px] w-full border-black rounded-[5px]"
               type={type}
               label={label}
@@ -82,7 +81,6 @@ function Form({ dataCarrier, editableData }: any) {
         <SelectInput
           key="key"
           className={{
-            parent: "flex flex-col rounded-[5px]",
             btnClassName:
               "h-[40px] w-full rounded-[3px] border-[1px] border-black",
             labelClassName: "mb-2 text-[14px] font-bold",

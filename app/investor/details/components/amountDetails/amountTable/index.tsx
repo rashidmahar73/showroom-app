@@ -1,7 +1,7 @@
+import React from "react";
 import { useRouter } from "next/navigation";
 import { Button, ConditionalRenderer } from "@/app/components";
-import { headTitles } from "./helpers";
-import React from "react";
+import { amountDetailsheadTitles } from "@/app/utils";
 
 function AmountTable({ data, setView }: any) {
   const router = useRouter();
@@ -19,24 +19,16 @@ function AmountTable({ data, setView }: any) {
     }
 
     if (type === "viewPurchase") {
-      setView(elem);
+      setView({
+        amount_id: elem?.amount_id,
+      });
       return;
     }
   }
 
-  const modifiedData = data?.map((item: any) => {
-    return {
-      ...item,
-      amount_id: item?.amountDetails?.map((item: any) => item.amount_id),
-    };
-  });
-
-  const allAmountIds = modifiedData?.map((elem: any) => elem.amount_id).flat();
-
+  const allAmountIds = data?.map((elem: any) => elem?.amount_ids)?.flat();
   const isMultiplePurchase = data
-    ?.map((elem: any) => {
-      return elem.amountDetails?.map((detail: any) => detail.is_purchase);
-    })
+    ?.map((elem: any) => elem?.is_purchase_items)
     ?.flat();
 
   return (
@@ -44,7 +36,7 @@ function AmountTable({ data, setView }: any) {
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gray-200">
-            {headTitles?.map((elem: any, index: number) => (
+            {amountDetailsheadTitles?.map((elem: any, index: number) => (
               <th className="border px-4 py-2" key={index}>
                 {elem.title}
               </th>
@@ -52,15 +44,15 @@ function AmountTable({ data, setView }: any) {
           </tr>
         </thead>
         <tbody>
-          {modifiedData?.map((elem: any, index: number) => (
+          {data?.map((elem: any, index: number) => (
             <TableRow
               elem={elem}
               index={index}
               onClickHandler={onClickHandler}
-              isSingleInvestor={modifiedData?.length <= 1}
+              isSingleInvestor={data?.length <= 1}
             />
           ))}
-          <ConditionalRenderer condition={modifiedData?.length > 1}>
+          <ConditionalRenderer condition={data?.length > 1}>
             <tr>
               <td />
               <td />
@@ -94,21 +86,15 @@ function AmountTable({ data, setView }: any) {
   );
 }
 
-function TableRow({
-  elem,
-  className = "",
-  index,
-  onClickHandler,
-  isSingleInvestor,
-}: any) {
+function TableRow({ elem, index, onClickHandler, isSingleInvestor }: any) {
   return (
     <>
       <React.Fragment key={index}>
-        {elem.amountDetails?.map((amount: any, idx: number) => (
+        {elem?.amount_details?.map((amount: any, idx: number) => (
           <tr
             key={idx}
             className={`${
-              idx === elem.amount_id.length - 1
+              idx === elem?.amount_ids?.length - 1
                 ? "border-b-black border-b-[1px]"
                 : ""
             } text-[14px] text-center`}
@@ -117,9 +103,9 @@ function TableRow({
               <>
                 <td
                   className="border border-black px-4 py-2"
-                  rowSpan={elem.amount_id.length}
+                  rowSpan={elem?.amount_ids?.length}
                 >
-                  {elem.investor_id}
+                  {elem?.investor_id}
                 </td>
               </>
             )}

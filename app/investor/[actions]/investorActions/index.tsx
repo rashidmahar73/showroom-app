@@ -8,13 +8,14 @@ import {
 } from "@/app/components";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { headTitles } from "./helpers";
+import { investorHeadTitles } from "../../headTitles";
 import { UseLazyApiCall } from "@/app/hooks";
 import { useRouter } from "next/navigation";
 import { toastTypesKeys } from "@/app/utils/constants";
 import { hasEmptyString, toastHandler } from "@/app/utils/helpers";
 import { ToastContainer } from "react-toastify";
 import { UpdateInvestor } from "./updateInvestor";
+import { ActionButton } from "../button";
 
 function AddOrUpdateInvestor() {
   const [investorList, setInvestorList] = useState<any>([]);
@@ -137,8 +138,10 @@ function AddOrUpdateInvestor() {
     }
   }, [investorsByUsers]);
 
-  const addHeadTitles = headTitles?.filter((elem, index) => index !== 0);
-  const modifiedHeadTitle = isUpdate ? headTitles : addHeadTitles;
+  const addHeadTitles = investorHeadTitles?.filter(
+    (elem, index) => index !== 0
+  );
+  const modifiedHeadTitle = isUpdate ? investorHeadTitles : addHeadTitles;
 
   if (isUpdate) {
     return (
@@ -161,18 +164,12 @@ function AddOrUpdateInvestor() {
         setState={setInvestorData}
         state={investorData}
       />
-      <div className="flex justify-end mt-5">
-        <Button
-          className={`h-[40px] ${
-            isEmptyFields
-              ? "opacity-40 cursor-default"
-              : "opacity-100 cursor-pointer"
-          } text-white px-3 rounded-[5px] text-[14px] bg-[#2182b0]`}
-          onClick={isEmptyFields ? () => {} : onClickAction}
-        >
-          {isEdit ? "Update" : "Add"}
-        </Button>
-      </div>
+      <ActionButton
+        condition={isEmptyFields}
+        onClick={isEmptyFields ? () => {} : onClickAction}
+      >
+        {isEdit ? "Update" : "Add"}
+      </ActionButton>
 
       <ConditionalRenderer condition={investorList?.length !== 0}>
         <h1 className="font-bold text-center text-[20px] my-10">
@@ -186,17 +183,9 @@ function AddOrUpdateInvestor() {
             onClickHandler={onClickHandler}
           />
         </div>
-
-        <div className="flex w-full mt-5">
-          <Button
-            className={`${
-              isLoading ? "opacity-40" : "opacity-100"
-            } h-[40px] text-white px-3 rounded-[5px] w-full  text-[14px] my-5 bg-[#2182b0]`}
-            onClick={onSubmit}
-          >
-            Submit
-          </Button>
-        </div>
+        <ActionButton condition={isLoading} onClick={onSubmit}>
+          Submit
+        </ActionButton>
       </ConditionalRenderer>
     </div>
   );

@@ -6,7 +6,6 @@ import { ConditionalRenderer } from "../conditionalRenderer";
 import { EyeOpenIcon, EyeCloseIcon } from "@/app/icons";
 
 type InputFieldT = {
-  parentClass: string;
   className: string;
   type: string;
   label: string;
@@ -17,7 +16,6 @@ type InputFieldT = {
 };
 
 function InputField({
-  parentClass,
   className,
   type,
   label,
@@ -31,7 +29,6 @@ function InputField({
   if (type === inputTypes.textarea)
     return (
       <TextArea
-        parentClass={parentClass}
         className={className}
         labelStyling={labelStyling}
         label={label}
@@ -53,7 +50,7 @@ function InputField({
   }
 
   return (
-    <div className={parentClass}>
+    <div className="flex flex-col">
       <label className={labelStyling}>{label}</label>
       <div className="relative flex items-center">
         <input
@@ -78,9 +75,9 @@ function InputField({
   );
 }
 
-function TextArea({ parentClass, labelStyling, label, className, value, handleOnChange, name }: any) {
+function TextArea({labelStyling, label, className, value, handleOnChange, name }: any) {
   return (
-    <div className={parentClass}>
+    <div className="flex flex-col">
       <label className={labelStyling}>{label}</label>
       <textarea
         className={className}

@@ -1,12 +1,9 @@
-import { Button, TableWrapper } from "@/app/components";
+import { TableWrapper } from "@/app/components";
 import { headTitles } from "./helpers";
-import { useRouter } from "next/navigation";
 import { UseLazyApiCall } from "@/app/hooks";
 import { useEffect } from "react";
 
-function ExtraExpense({view}:any) {
-  const router = useRouter();
-
+function ExtraExpense({ view }: any) {
   const [getData, { data: extraExpenseDetail }] = UseLazyApiCall({
     url: "users/investors/extraExpenseDetails",
     method: "POST",
@@ -16,17 +13,15 @@ function ExtraExpense({view}:any) {
     getData({ params: { purchase_id: view?.purchase_id } });
   }, []);
 
-  console.log(view,'View')
-
   function onClickHandler(type: any, elem: any) {
     return () => {
-      if (type === "update") {
-        const serializedObject = encodeURIComponent(JSON.stringify(elem));
-        router.push(`investor/updateExtraExpense?data=${serializedObject}`);
-        return;
-      }
-      if (type === "remove") {
-      }
+      // if (type === "update") {
+      //   const serializedObject = encodeURIComponent(JSON.stringify(elem));
+      //   router.push(`investor/updateExtraExpense?data=${serializedObject}`);
+      //   return;
+      // }
+      // if (type === "remove") {
+      // }
     };
   }
   return (
@@ -58,14 +53,14 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         <td className="px-2 py-4">{elem?.total_expense}</td>
         <td className="px-2 py-4">{elem?.detail}</td>
         <td className="px-2 py-4">{elem?.other_expense}</td>
-        <td className="px-2 py-4">
+        {/* <td className="px-2 py-4">
           <Button
             className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
             onClick={onClickHandler("update", elem)}
           >
             Update
           </Button>
-        </td>
+        </td> */}
       </tr>
     </>
   );

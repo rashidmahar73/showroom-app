@@ -12,9 +12,12 @@ import { useState } from "react";
 import { ConditionalRenderer } from "@/app/components";
 
 function Details() {
-  const [view, setView] = useState(null);
-  const [extraExpenseView, setExtraExpenseView] = useState(null);
-  const [sellView, setSellView] = useState(null);
+  const [view, setView] = useState({
+    amount_id: [],
+    purchase_id: null,
+    sell_id: null,
+  });
+
   const searchParams = useSearchParams();
 
   const encodedData = searchParams.get("data");
@@ -28,20 +31,15 @@ function Details() {
       <h1 className="text-[20px] text-center font-bold my-5">
         InvestorID: {parsedData?.toString()}
       </h1>
-      <AmountDetails setView={setView} />
-      <ConditionalRenderer condition={!!view}>
-        <PurchaseDetails
-          amountDetails={view}
-          view={view}
-          setView={setExtraExpenseView}
-          setSellView={setSellView}
-        />
+      <AmountDetails setView={setView} parsedData={parsedData} />
+      <ConditionalRenderer condition={view?.amount_id?.length > 0}>
+        <PurchaseDetails view={view} setView={setView} />
       </ConditionalRenderer>
-      <ConditionalRenderer condition={!!extraExpenseView}>
-        <ExtraExpense view={extraExpenseView} />
+      <ConditionalRenderer condition={!!view?.purchase_id}>
+        <ExtraExpense view={view} />
       </ConditionalRenderer>
-      <ConditionalRenderer condition={!!sellView}>
-      <SellDetails view={sellView} />
+      <ConditionalRenderer condition={!!view?.sell_id}>
+        <SellDetails view={view} />
       </ConditionalRenderer>
     </div>
   );

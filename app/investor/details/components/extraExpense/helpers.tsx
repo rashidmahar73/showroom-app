@@ -34,11 +34,11 @@ const headTitles = [
     styling: "w-[8%] text-[14px] text-center",
     title: "Other Expense",
   },
-  {
-    id: 6,
-    styling: "w-[8%] text-[14px] text-center",
-    title: "Update",
-  },
+  // {
+  //   id: 6,
+  //   styling: "w-[8%] text-[14px] text-center",
+  //   title: "Update",
+  // },
 ];
 
 export { headTitles };

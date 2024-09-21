@@ -7,4 +7,5 @@ export * from "./selectInput";
 export * from "./debounce";
 export * from "./tableWrapper";
 export * from "./inputGrid";
+export * from "./pagination";
 

@@ -1,10 +1,60 @@
 import { Button, TableWrapper } from "@/app/components";
-import { headTitles } from "./helpers";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { UseLazyApiCall } from "@/app/hooks";
+import { purchaseHeadTitles } from "@/app/investor/headTitles";
 
-function PurchaseDetails({ amountDetails, view, setView, setSellView }: any) {
+const headTitles = [
+  {
+    id: 1,
+    styling: "w-[8%] text-[14px] text-center",
+    title: "Amount ID",
+  },
+  {
+    id: 2,
+    styling: "w-[8%] text-[14px] text-center",
+    title: "Purchase ID",
+  },
+  {
+    id: 3,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Vehicle Company",
+  },
+  { id: 4, styling: "w-[8%] text-[16px] text-center", title: "Vehicle Type" },
+  {
+    id: 5,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Vehicle Registration No.",
+  },
+  {
+    id: 6,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Vehicle Chases No.",
+  },
+  { id: 7, styling: "w-[8%] text-[16px] text-center", title: "Vehicle Model" },
+  {
+    id: 8,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Vehicle Meter Reading",
+  },
+  {
+    id: 9,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Purchase Date",
+  },
+  {
+    id: 10,
+    styling: "w-[8%] text-[14px] text-center",
+    title: "Extra Expense",
+  },
+  {
+    id: 11,
+    styling: "w-[8%] text-[14px] text-center",
+    title: "Sell",
+  },
+];
+
+function PurchaseDetails({ view, setView }: any) {
   const router = useRouter();
 
   const [getData, { data: purchaseDetail }] = UseLazyApiCall({
@@ -13,7 +63,7 @@ function PurchaseDetails({ amountDetails, view, setView, setSellView }: any) {
   }) as any;
 
   useEffect(() => {
-    getData({ params: { amount_id: amountDetails?.amount_id } });
+    getData({ params: { amount_id: view?.amount_id } });
   }, [view]);
 
   function onClickHandler(type: any, elem: any) {
@@ -23,18 +73,18 @@ function PurchaseDetails({ amountDetails, view, setView, setSellView }: any) {
         router.push(`investor/addPurchase?data=${serializedObject}`);
         return;
       }
-      if (type === "updatePurchase") {
-        const serializedObject = encodeURIComponent(JSON.stringify(elem));
-        router.push(`updatePurchase?data=${serializedObject}`);
-        return;
-      }
+      // if (type === "updatePurchase") {
+      //   const serializedObject = encodeURIComponent(JSON.stringify(elem));
+      //   router.push(`updatePurchase?data=${serializedObject}`);
+      //   return;
+      // }
       if (type === "addSell") {
         const serializedObject = encodeURIComponent(JSON.stringify(elem));
         router.push(`addSell?data=${serializedObject}`);
         return;
       }
       if (type === "viewSell") {
-        setSellView(elem);
+        setView({ sell_id: elem?.purchase_id, ...view });
         return;
       }
       if (type === "addExtraExpense") {
@@ -43,7 +93,7 @@ function PurchaseDetails({ amountDetails, view, setView, setSellView }: any) {
         return;
       }
       if (type === "viewExtraExpense") {
-        setView(elem);
+        setView({ purchase_id: elem?.purchase_id, ...view });
         return;
       }
     };
@@ -100,14 +150,6 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
             )}
           >
             {elem?.is_sell ? "View" : "Add"} Sell
-          </Button>
-        </td>
-        <td className="px-2 py-4">
-          <Button
-            className="h-[35px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-            onClick={onClickHandler("updatePurchase", elem)}
-          >
-            Update
           </Button>
         </td>
       </tr>

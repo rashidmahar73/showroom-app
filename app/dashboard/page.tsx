@@ -25,12 +25,12 @@ function Dashboard() {
   });
 
   const [getData, { data: removeData }] = UseLazyApiCall({
-    url: "remove",
+    url: "users/remove",
     method: "DELETE",
   }) as any;
 
   function onClickHandler(type: any, elem: any) {
-    return () => {
+    return async () => {
       if (type === "update") {
         setIsEdit({ data: elem }), setIsShow(true);
         return;
@@ -39,7 +39,7 @@ function Dashboard() {
         const removeDetail = {
           id: elem.id,
         };
-        getData({ params: removeDetail });
+        await getData({ params: removeDetail });
         return;
       }
     };

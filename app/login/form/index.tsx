@@ -46,7 +46,6 @@ function Form({ dataCarrier }: any) {
           {loginInputItems?.map(({ type, label, name, value }, index) => (
             <div key={`user-registration-${index}`} className="w-[400px]">
               <InputField
-                parentClass="flex flex-col mt-3"
                 className="h-[40px] border-[1px] w-full border-black rounded-[5px]"
                 type={type}
                 label={label}
