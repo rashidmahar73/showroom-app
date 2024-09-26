@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, TableWrapper } from "../components";
+import { Button, ConditionalRenderer, TableWrapper } from "../components";
 import { headTitles } from "./helpers";
 import { UserRegistration } from "./userRegistration";
 import { UseApiCall, UseLazyApiCall } from "../hooks";
@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { toastHandler } from "../utils/helpers";
 import { toastTypesKeys } from "../utils/constants";
 import withAuth from "../withAuth";
+import { EyeCloseIcon, EyeOpenIcon } from "../icons";
 
 function Dashboard() {
   const [isShow, setIsShow] = useState(false);
@@ -85,6 +86,12 @@ function Dashboard() {
 }
 
 function TableRow({ elem, className = "", onClickHandler }: any) {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+
+  function showPasswordHandle() {
+    setIsShowPassword(!isShowPassword);
+  }
+
   return (
     <tr
       className={
@@ -96,7 +103,20 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-2 py-4">{elem?.name}</td>
       <td className="px-2 py-4">{elem?.email}</td>
       <td className="px-2 py-4">{elem?.phonenumber}</td>
-      <td className="px-2 py-4">{elem?.password}</td>
+
+      <td className="px-2 py-4">
+        <div
+          className={` flex ${
+            isShowPassword ? "justify-between" : "justify-center"
+          } items-center`}
+        >
+          {isShowPassword ? elem?.password : ""}
+          <div className="cursor-pointer h-full" onClick={showPasswordHandle}>
+            {isShowPassword ? <EyeOpenIcon /> : <EyeCloseIcon />}
+          </div>
+        </div>
+      </td>
+      <td className="px-2 py-4">{elem?.showroom_name}</td>
       <td className="px-2 py-4">{elem?.role}</td>
       <td className="px-2 py-4">
         <Button

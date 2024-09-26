@@ -3,7 +3,7 @@ import { headTitles } from "./helpers";
 import { UseLazyApiCall } from "@/app/hooks";
 import { useEffect } from "react";
 
-function ExtraExpense({ view }: any) {
+function ExtraExpense({ view, setData, data }: any) {
   const [getData, { data: extraExpenseDetail }] = UseLazyApiCall({
     url: "users/investors/extraExpenseDetails",
     method: "POST",
@@ -12,6 +12,15 @@ function ExtraExpense({ view }: any) {
   useEffect(() => {
     getData({ params: { purchase_id: view?.purchase_id } });
   }, []);
+
+  useEffect(() => {
+    if (extraExpenseDetail?.data) {
+      const extraExpenseObject = extraExpenseDetail?.data?.find(
+        (item: any) => item
+      );
+      setData({ extra_expense_details: extraExpenseObject, ...data });
+    }
+  }, [extraExpenseDetail]);
 
   function onClickHandler(type: any, elem: any) {
     return () => {

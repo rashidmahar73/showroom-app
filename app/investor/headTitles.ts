@@ -54,6 +54,11 @@ const purchaseHeadTitles = [
     title: "Vehicle Meter Reading",
   },
   {
+    id: 8,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Purchase Amount",
+  },
+  {
     id: 7,
     styling: "w-[8%] text-[16px] text-center",
     title: "Purchase Date",

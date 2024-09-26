@@ -17,6 +17,7 @@ const purchaseDefaultObject = {
   vehicle_chases_no: "",
   vehicle_model: "",
   vehicle_meter_reading: "",
+  purchase_amount: "",
   purchase_date: "",
 };
 
@@ -92,7 +93,7 @@ function moduleInputItems(module: any, state: any) {
         value: state.vehicle_chases_no,
       },
       {
-        type: "text",
+        type: "number",
         label: "Vehicle Model",
         name: "vehicle_model",
         value: state.vehicle_model,
@@ -102,6 +103,12 @@ function moduleInputItems(module: any, state: any) {
         label: "Vehicle Meter Reading",
         name: "vehicle_meter_reading",
         value: state.vehicle_meter_reading,
+      },
+      {
+        type: "number",
+        label: "Purchase Amount",
+        name: "purchase_amount",
+        value: state.purchase_amount,
       },
       {
         type: "date",

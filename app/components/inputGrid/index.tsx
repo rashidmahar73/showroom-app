@@ -28,7 +28,7 @@ function InputGrid({ items = [], setState, state, variant }: any) {
           />
         </div>
       ))}
-      <ConditionalRenderer condition={variant}>
+      <ConditionalRenderer condition={variant === "amountModule"}>
         <SelectInput
           key="key"
           className={{
@@ -44,6 +44,24 @@ function InputGrid({ items = [], setState, state, variant }: any) {
           ]}
           label="Type"
           selectedValue={state?.investor_amount_type}
+          onClickHanlder={onClickHanlder}
+        />
+      </ConditionalRenderer>
+      <ConditionalRenderer condition={variant === "dealModule"}>
+        <SelectInput
+          key="key"
+          className={{
+            btnClassName:
+              "h-[40px] w-full rounded-[3px] border-[1px] border-black",
+            labelClassName: "mb-2 text-[14px] font-bold",
+            selectedClassName: "text-[14px] pl-2",
+          }}
+          listItems={[
+            { name: "status", value: "Available" },
+            { name: "status", value: "Sold" },
+          ]}
+          label="Status"
+          selectedValue={state?.status}
           onClickHanlder={onClickHanlder}
         />
       </ConditionalRenderer>

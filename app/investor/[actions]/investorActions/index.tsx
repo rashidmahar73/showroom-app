@@ -16,6 +16,7 @@ import { hasEmptyString, toastHandler } from "@/app/utils/helpers";
 import { ToastContainer } from "react-toastify";
 import { UpdateInvestor } from "./updateInvestor";
 import { ActionButton } from "../button";
+import { useUser } from "@/app/providers";
 
 function AddOrUpdateInvestor() {
   const [investorList, setInvestorList] = useState<any>([]);
@@ -30,6 +31,8 @@ function AddOrUpdateInvestor() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const isUpdate = pathname?.includes("update");
+  const { userData } = useUser();
+  const { user } = userData || {};
 
   const encodedData = searchParams.get("data");
   const parsedData = encodedData
@@ -80,7 +83,7 @@ function AddOrUpdateInvestor() {
     });
   }
 
-  const investorInputItems = [
+  const inputItems = [
     {
       type: "text",
       label: "Name",
@@ -112,20 +115,21 @@ function AddOrUpdateInvestor() {
       method: "POST",
     }) as any;
 
-  function onSubmit() {
+  async function onSubmit() {
     const newInvestors = {
       tracking_id: Date.now(),
       investorsList: investorList,
     };
 
-    getData({ params: newInvestors });
+    await getData({ params: newInvestors });
 
     const investors_add_by_users = {
-      userID: 2015,
+      userID: user?.id,
+      showroom_name: user?.showroom_name,
       investors_tracking_id: newInvestors?.tracking_id,
     };
 
-    postInvestorsIDByUsers({ params: investors_add_by_users });
+    await postInvestorsIDByUsers({ params: investors_add_by_users });
   }
 
   useEffect(() => {
@@ -146,7 +150,7 @@ function AddOrUpdateInvestor() {
   if (isUpdate) {
     return (
       <UpdateInvestor
-        investorInputItems={investorInputItems}
+        inputItems={inputItems}
         setInvestorData={setInvestorData}
         investorData={investorData}
       />
@@ -160,7 +164,7 @@ function AddOrUpdateInvestor() {
       <ToastContainer />
       <h1 className="font-bold text-center text-[20px] my-10">Add Investor</h1>
       <InputGrid
-        items={investorInputItems}
+        items={inputItems}
         setState={setInvestorData}
         state={investorData}
       />

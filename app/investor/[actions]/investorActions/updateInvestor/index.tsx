@@ -1,7 +1,7 @@
 import { InputGrid } from "@/app/components";
 
 function UpdateInvestor({
-  investorInputItems,
+  inputItems,
   setInvestorData,
   investorData,
 }: any) {
@@ -14,7 +14,7 @@ function UpdateInvestor({
         {/* Investor ID {investorData.investorID} */}
       </h1>
       <InputGrid
-        items={investorInputItems}
+        items={inputItems}
         setState={setInvestorData}
         state={investorData}
       />

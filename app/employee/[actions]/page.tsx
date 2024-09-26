@@ -2,11 +2,11 @@
 import { ConditionalRenderer } from "@/app/components";
 import withAuth from "@/app/withAuth";
 import { usePathname } from "next/navigation";
-import { AddOrUpdateDealer } from "./dealActions";
+import { AddOrUpdateEmployee } from "./employeeActions";
 
 const paths = {
-  addDeals: "/dealer/addDeals",
-  updateDeals: "/dealer/updateDeals",
+  addEmployee: "/employee/addEmployee",
+  updateEmployee: "/employee/updateEmployee",
 };
 
 function Actions() {
@@ -16,10 +16,10 @@ function Actions() {
     <div>
       <ConditionalRenderer
         condition={
-          pathname === paths?.addDeals || pathname === paths?.updateDeals
+          pathname === paths?.addEmployee || pathname === paths?.updateEmployee
         }
       >
-        <AddOrUpdateDealer />
+        <AddOrUpdateEmployee />
       </ConditionalRenderer>
     </div>
   );

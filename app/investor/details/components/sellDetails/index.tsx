@@ -3,7 +3,7 @@ import { headTitles } from "./helpers";
 import { UseLazyApiCall } from "@/app/hooks";
 import { useEffect } from "react";
 
-function SellDetails({ view }: any) {
+function SellDetails({ view, setData, data }: any) {
   // purchaseID API Call Happen
 
   const [getData, { data: sellDetail }] = UseLazyApiCall({
@@ -14,6 +14,13 @@ function SellDetails({ view }: any) {
   useEffect(() => {
     getData({ params: { purchase_id: view?.sell_id } });
   }, []);
+
+  useEffect(() => {
+    if (sellDetail?.data) {
+      const sellDetailObject = sellDetail?.data?.find((item: any) => item);
+      setData({ sell_details: sellDetailObject, ...data });
+    }
+  }, [sellDetail?.data]);
 
   function onClickHandler(type: any, elem: any) {
     return () => {
@@ -49,9 +56,9 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-2 py-4">{elem?.purchase_id}</td>
       <td className="px-2 py-4">{elem?.sell_id}</td>
       <td className="px-2 py-4">{elem?.sell_by}</td>
-      <td className="px-2 py-4">{elem?.sell_amount}</td>
       <td className="px-2 py-4">{elem?.selling_date}</td>
       <td className="px-2 py-4">{elem?.selling_price}</td>
+      <td className="px-2 py-4">{elem?.sell_amount}</td>
       {/* <td className="px-2 py-4">
         <Button
           className="h-[30px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"

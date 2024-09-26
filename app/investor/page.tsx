@@ -13,10 +13,22 @@ import {
 } from "../components";
 import { UseApiCall } from "../hooks";
 import { investorDetailsHeadTitles } from "../utils";
+import { toastTypesKeys } from "../utils/constants";
+import { toastHandler } from "../utils/helpers";
+import { ToastContainer } from "react-toastify";
+import { useUser } from "../providers";
+import { useDispatch, useSelector } from "react-redux";
+import { storePageNumber } from "../providers/redux/reducer";
 
 function Investor() {
-  const [currentPageNumber, setCurrentPageNumber] = useState(1);
   // const [inputValue, setInputValue] = useState("");
+  const dispatch = useDispatch();
+
+  const pageNumber = useSelector(
+    (state: any) => state?.paginationReducer?.pageNumber
+  );
+  const { userData: getUserDetails } = useUser();
+  const { id: userID } = getUserDetails?.user || {};
 
   const router = useRouter();
 
@@ -26,12 +38,17 @@ function Investor() {
   }
 
   const {
-    data: investorsList = { data: [], pagination: { totalPages: 0 } },
+    data: investorsList = {
+      data: [],
+      status: 0,
+      message: "",
+      pagination: { totalPages: 0 },
+    },
     isLoading,
     error,
     refetch,
   } = UseApiCall({
-    url: `users/investors/2015/investorsList?page=${currentPageNumber}`,
+    url: `users/investors/${userID}/investorsList?page=${pageNumber}`,
     method: "GET",
   });
 
@@ -58,7 +75,7 @@ function Investor() {
   }
 
   function onPageChange(pageNumber: number) {
-    setCurrentPageNumber(pageNumber);
+    dispatch(storePageNumber(pageNumber));
   }
 
   // function handleOnChange({ target }: any) {
@@ -68,7 +85,7 @@ function Investor() {
 
   useEffect(() => {
     refetch();
-  }, [currentPageNumber]);
+  }, [pageNumber]);
 
   // const [getData, { data: searchInvestorData }] = UseLazyApiCall({
   //   url: "users/investors/searchInvestor",
@@ -82,6 +99,7 @@ function Investor() {
   if (investorsList?.data?.length === 0) {
     return (
       <div className="mx-20">
+        <ToastContainer />
         <h1 className="text-[20px] text-center font-bold my-5">Investor</h1>
         <div className="flex justify-end">
           <Button
@@ -91,6 +109,9 @@ function Investor() {
             Add Investor
           </Button>
         </div>
+        <h1 className="text-center text-[20px] font-bold">
+          {investorsList?.message}
+        </h1>
       </div>
     );
   }
@@ -133,7 +154,7 @@ function Investor() {
       </div>
       <div className="my-10">
         <Pagination
-          currentPage={currentPageNumber}
+          currentPage={pageNumber}
           onPageChange={onPageChange}
           isLoading={isLoading}
           pagination={{
@@ -145,7 +166,6 @@ function Investor() {
     </div>
   );
 }
-
 
 function TableRow({ elem, index, onClickHandler }: any) {
   return (
@@ -182,20 +202,23 @@ function TableRow({ elem, index, onClickHandler }: any) {
             </Button>
           </td>
           <ConditionalRenderer condition={investor?.is_amount_added}>
-          {idx === 0 && (
-            <>
-              <td className="px-2 py-4" rowSpan={elem?.investors_list?.length}>
-                <div className="flex items-center justify-center cursor-pointer">
-                  <Button
-                    className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-                    onClick={onClickHandler("details", elem?.investor_id)}
-                  >
-                    View Details
-                  </Button>
-                </div>
-              </td>
-            </>
-          )}
+            {idx === 0 && (
+              <>
+                <td
+                  className="px-2 py-4"
+                  rowSpan={elem?.investors_list?.length}
+                >
+                  <div className="flex items-center justify-center cursor-pointer">
+                    <Button
+                      className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
+                      onClick={onClickHandler("details", elem?.investor_id)}
+                    >
+                      View Details
+                    </Button>
+                  </div>
+                </td>
+              </>
+            )}
           </ConditionalRenderer>
         </tr>
       ))}

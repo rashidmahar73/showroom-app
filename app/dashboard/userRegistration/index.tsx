@@ -22,9 +22,23 @@ function UserRegistration({
     method: "POST",
   }) as any;
 
+  const [getUpdateUserData, { data: updateUserData }] = UseLazyApiCall({
+    url: "users/updateUser",
+    method: "PUT",
+  }) as any;
+
   async function dataCarrier(userData: any) {
-    if(Object.keys(editableData)?.length>0){
-      
+    if (Object.keys(editableData)?.length > 0) {
+      const updateUser={
+        userID:userData?.id,
+        name: userData.name,
+        email: userData.email,
+        phonenumber: Number(userData.phonenumber),
+        password: userData.password,
+        role: userData?.role?.toLowerCase(),
+        showroom_name: userData?.showroom_name,    
+      }
+      await getUpdateUserData({params:updateUser});
       return;
     }
     const userDataDetails = {
@@ -33,6 +47,7 @@ function UserRegistration({
       phonenumber: Number(userData.phonenumber),
       password: userData.password,
       role: userData?.role?.toLowerCase(),
+      showroom_name: userData?.showroom_name,
     };
 
     getData({ params: userDataDetails });
@@ -49,13 +64,26 @@ function UserRegistration({
     }
   }, [signupData]);
 
-  console.log(editableData,'isEdit')
+  useEffect(()=>{
+    if(updateUserData?.status===200){
+      toastHandler(updateUserData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        setIsShow(false);
+        refetchUsers();
+      }, 3000);
+    }
+
+  },[updateUserData])
 
   return (
     <>
       <Modal isShow={isShow} className="flex items-center justify-center">
         <Modal.Header
-          title="User Registration Form"
+          title={
+            Object.keys(editableData).length > 0
+              ? "Update User"
+              : "User Registration Form"
+          }
           onclickHandler={handleModalClose}
         />
         <div className="w-[120dvh]">

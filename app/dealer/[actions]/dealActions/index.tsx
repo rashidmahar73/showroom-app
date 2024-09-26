@@ -1,25 +1,55 @@
 "use client";
 
-import { Button, ConditionalRenderer, TableWrapper, InputGrid } from "@/app/components";
-import { useState } from "react";
+import {
+  Button,
+  ConditionalRenderer,
+  TableWrapper,
+  InputGrid,
+} from "@/app/components";
+import { useEffect, useState } from "react";
 import { headTitles } from "./helpers";
+import { UseLazyApiCall } from "@/app/hooks";
+import { hasEmptyString, toastHandler } from "@/app/utils/helpers";
+import { ToastContainer } from "react-toastify";
+import { toastTypesKeys } from "@/app/utils/constants";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { UpdateDeal } from "./updateDeal";
+
+const defaultObject = {
+  tracking_id: 0,
+  owner_name: "",
+  owner_phone_number: "",
+  price_demand: "",
+  deal_date: "",
+  vehicle_company: "",
+  vehicle_type: "",
+  vehicle_registration_no: "",
+  vehicle_chases_no: "",
+  vehicle_model: "",
+  vehicle_meter_reading: "",
+  status: "",
+};
 
 function AddOrUpdateDealer() {
-  const [dealerData, setDealerData] = useState({
-    owner_name: "",
-    owner_phone_number: "",
-    price_demand: "",
-    deal_date: "",
-    commission_percentage: "",
-    vehicle_company: "",
-    vehicle_type: "",
-    vehicle_registration_no: "",
-    vehicle_chases_no: "",
-    vehicle_model: "",
-    vehicle_meter_reading: "",
-  });
-  const [currentDealerData, setCurrentDealerData] = useState<any>({});
+  const [currentDealerData, setCurrentDealerData] = useState<any>([]);
+  const [dealerData, setDealerData] = useState(defaultObject);
   const [isEdit, setIsEdit] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const encodedData = searchParams?.get("data");
+  console.log(encodedData,'encodedData')
+  const parsedData = encodedData
+    ? JSON.parse(decodeURIComponent(encodedData))
+    : null;
+
+  useEffect(() => {
+    if (parsedData) return setDealerData(parsedData);
+  }, []);
+
+  const isUpdate = pathname === "/dealer/updateDeals";
 
   const dealerInputItems = [
     {
@@ -29,7 +59,7 @@ function AddOrUpdateDealer() {
       value: dealerData.owner_name,
     },
     {
-      type: "text",
+      type: "number",
       label: "Owner Phone Number",
       name: "owner_phone_number",
       value: dealerData.owner_phone_number,
@@ -47,12 +77,6 @@ function AddOrUpdateDealer() {
       value: dealerData.deal_date,
     },
     {
-      type: "number",
-      label: "Commission Percentage",
-      name: "commission_percentage",
-      value: dealerData.commission_percentage,
-    },
-    {
       type: "text",
       label: "Vehicle Company",
       name: "vehicle_company",
@@ -65,13 +89,13 @@ function AddOrUpdateDealer() {
       value: dealerData.vehicle_type,
     },
     {
-      type: "text",
+      type: "number",
       label: "Vehicle Registration No",
       name: "vehicle_registration_no",
       value: dealerData.vehicle_registration_no,
     },
     {
-      type: "text",
+      type: "number",
       label: "Vehicle Chases No",
       name: "vehicle_chases_no",
       value: dealerData.vehicle_chases_no,
@@ -90,69 +114,139 @@ function AddOrUpdateDealer() {
     },
   ];
 
-  function onClickDealerAction() {
+  const [getUpdateDealData, { data: updateDealData }] = UseLazyApiCall({
+    url: "users/dealer/updateDeal",
+    method: "PUT",
+  }) as any;
+
+  async function onClickHandler(type: string, updatedData: any) {
+    if (type === "update" && updatedData) {
+      await getUpdateDealData({ params: updatedData });
+
+      return;
+    }
     if (isEdit) {
+      const updatedDealerList = currentDealerData.map((elem: any) =>
+        elem.tracking_id === dealerData?.tracking_id ? { ...dealerData } : elem
+      );
+      setCurrentDealerData(updatedDealerList);
+      setDealerData(defaultObject);
       setIsEdit(false);
+      return;
     }
 
-    setCurrentDealerData(currentDealerData);
-    setDealerData({
-      owner_name: "",
-      owner_phone_number: "",
-      price_demand: "",
-      deal_date: "",
-      commission_percentage: "",
-      vehicle_company: "",
-      vehicle_type: "",
-      vehicle_registration_no: "",
-      vehicle_chases_no: "",
-      vehicle_model: "",
-      vehicle_meter_reading: "",
-    });
+    setCurrentDealerData([
+      ...currentDealerData,
+      { ...dealerData, tracking_id: Date.now() },
+    ]);
+    setDealerData(defaultObject);
   }
 
-  function onClickHandler(type:any,elem:any){
+  
+  useEffect(() => {
+    if (updateDealData?.status === 200) {
+      toastHandler(updateDealData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        router.push(`/dealer`);
+        return;
+      }, 3000);
+    }
+  }, [updateDealData]);
 
+  function onClickTableHandler(type: any, elem: any) {
+    return () => {
+      if (type === "remove") {
+        const updatedDealerList = currentDealerData.filter(
+          (listItem: any) => elem.tracking_id !== listItem?.tracking_id
+        );
+        setCurrentDealerData(updatedDealerList);
+        return;
+      }
+
+      setDealerData(elem);
+      setIsEdit(true);
+    };
   }
 
-  function onSubmit(){
+  const [getData, { data: addDealsData, isLoading }] = UseLazyApiCall({
+    url: "users/dealer/addDeals",
+    method: "POST",
+  }) as any;
 
+  async function onSubmit() {
+    const dealsIDList = currentDealerData?.map(
+      (item: any) => item?.tracking_id
+    );
+    const addDealsData = {
+      id: 2011,
+      showroom_name: "suhaib showroom",
+      deals_list: currentDealerData,
+      deals_tracking_list: dealsIDList,
+    };
+
+    await getData({ params: addDealsData });
   }
 
-  console.log(dealerData, "dealerData");
+  useEffect(() => {
+    if (addDealsData?.status === 200) {
+      toastHandler(addDealsData.message, toastTypesKeys.success);
+      setTimeout(() => {
+        router.push(`/dealer`);
+        return;
+      }, 3000);
+    }
+  }, [addDealsData]);
+
+  const isEmptyFields = hasEmptyString(dealerData);
+
+  if (isUpdate) {
+    return (
+      <UpdateDeal
+        onClickHandler={() => onClickHandler("update", dealerData)}
+        dealerInputItems={dealerInputItems}
+        setDealerData={setDealerData}
+        dealerData={dealerData}
+      />
+    );
+  }
 
   //for add below is jsx
   return (
     <div className="mx-20">
-      <h1 className="text-[23px] text-center font-bold my-5">Add Dealer</h1>
+      <ToastContainer />
+      <h1 className="text-[23px] text-center font-bold my-5">Add Deals</h1>
       <InputGrid
         items={dealerInputItems}
         setState={setDealerData}
         state={dealerData}
+        variant={"dealModule"}
       />
       <div className="flex justify-end my-5">
         <Button
-          className="h-[40px] text-white text-[13px] px-3 rounded-[5px] bg-[#2182b0]"
-          onClick={onClickDealerAction}
+          className={`${
+            isEmptyFields
+              ? "opacity-40 cursor-default"
+              : "opacity-100 cursor-pointer"
+          } h-[40px] text-white text-[13px] px-3 rounded-[5px] bg-[#2182b0]`}
+          onClick={isEmptyFields ? () => {} : () => onClickHandler("", {})}
         >
-          {isEdit ? "Update" : "Add"} Amount
+          {isEdit ? "Update" : "Add"}
         </Button>
       </div>
-      <ConditionalRenderer
-        condition={Object.keys(currentDealerData)?.length !== 0}
-      >
+      <ConditionalRenderer condition={currentDealerData?.length !== 0}>
         <div className="rounded-sm mt-5">
           <TableWrapper
             headerList={headTitles}
-            items={[currentDealerData] || []}
+            items={currentDealerData || []}
             TableRow={TableRow}
-            onClickHandler={onClickHandler}
+            onClickHandler={onClickTableHandler}
           />
         </div>
-        <div className="flex w-full my-5">
+        <div className="flex justify-end my-5">
           <Button
-            className={`${false ? "opacity-40" : "opacity-100"
-              } h-[40px] text-white px-3 text-[13px] w-full rounded-[5px] bg-[#2182b0]`}
+            className={`${
+              isLoading ? "opacity-40" : "opacity-100"
+            } h-[40px] text-white px-5 text-[13px] rounded-[5px] bg-[#2182b0]`}
             onClick={onSubmit}
           >
             Submit
@@ -164,45 +258,42 @@ function AddOrUpdateDealer() {
 }
 
 function TableRow({ elem, className = "", onClickHandler }: any) {
-    return (
-      <tr
-        className={
-          className ||
-          "even:bg-[#ECEDED] text-center border-b-[2px] border-b-[#686868] text-[15px] w-full text-black"
-        }
-      >
-         {/* : "",
-    : "",
-    : "",
-    : "",
-    : "",
-    : "",
-    : "",
-    : "",
-    : "",
-    : "",
-    : "", */}
-        <td className="px-2 py-4">{elem?.owner_name}</td>
-        <td className="px-2 py-4">{elem?.owner_phone_number}</td>
-        <td className="px-2 py-4">{elem?.price_demand}</td>
-        <td className="px-2 py-4">{elem?.deal_date}</td>
-        <td className="px-2 py-4">{elem?.commission_percentage}</td>
-        <td className="px-2 py-4">{elem?.vehicle_company}</td>
-        <td className="px-2 py-4">{elem?.vehicle_type}</td>
-        <td className="px-2 py-4">{elem?.vehicle_registration_no}</td>
-        <td className="px-2 py-4">{elem?.vehicle_chases_no}</td>
-        <td className="px-2 py-4">{elem?.vehicle_model}</td>
-        <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
-        <td className="px-2 py-4">
-          <Button
-            className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
-            onClick={onClickHandler("edit", elem)}
-          >
-            Edit
-          </Button>
-        </td>
-      </tr>
-    );
-  }
+  return (
+    <tr
+      className={
+        className ||
+        "even:bg-[#ECEDED] text-center border-b-[2px] border-b-[#686868] text-[15px] w-full text-black"
+      }
+    >
+      <td className="px-2 py-4">{elem?.tracking_id}</td>
+      <td className="px-2 py-4">{elem?.owner_name}</td>
+      <td className="px-2 py-4">{elem?.owner_phone_number}</td>
+      <td className="px-2 py-4">{elem?.price_demand}</td>
+      <td className="px-2 py-4">{elem?.deal_date}</td>
+      <td className="px-2 py-4">{elem?.vehicle_company}</td>
+      <td className="px-2 py-4">{elem?.vehicle_type}</td>
+      <td className="px-2 py-4">{elem?.vehicle_registration_no}</td>
+      <td className="px-2 py-4">{elem?.vehicle_chases_no}</td>
+      <td className="px-2 py-4">{elem?.vehicle_model}</td>
+      <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
+      <td className="px-2 py-4">
+        <Button
+          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          onClick={onClickHandler("edit", elem)}
+        >
+          Edit
+        </Button>
+      </td>
+      <td className="px-2 py-4">
+        <Button
+          className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"
+          onClick={onClickHandler("remove", elem)}
+        >
+          Remove
+        </Button>
+      </td>
+    </tr>
+  );
+}
 
 export { AddOrUpdateDealer };

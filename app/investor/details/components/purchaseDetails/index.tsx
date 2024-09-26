@@ -38,6 +38,11 @@ const headTitles = [
     title: "Vehicle Meter Reading",
   },
   {
+    id: 12,
+    styling: "w-[8%] text-[16px] text-center",
+    title: "Purchase Amount",
+  },
+  {
     id: 9,
     styling: "w-[8%] text-[16px] text-center",
     title: "Purchase Date",
@@ -54,7 +59,7 @@ const headTitles = [
   },
 ];
 
-function PurchaseDetails({ view, setView }: any) {
+function PurchaseDetails({ view, setView, setData, data }: any) {
   const router = useRouter();
 
   const [getData, { data: purchaseDetail }] = UseLazyApiCall({
@@ -65,6 +70,14 @@ function PurchaseDetails({ view, setView }: any) {
   useEffect(() => {
     getData({ params: { amount_id: view?.amount_id } });
   }, [view]);
+
+  useEffect(()=>{
+    if(purchaseDetail?.data){
+      const purchaseObj=purchaseDetail?.data?.find((item:any)=>item)
+      setData({purchase_details:purchaseObj, ...data})
+    }
+
+  },[purchaseDetail])
 
   function onClickHandler(type: any, elem: any) {
     return () => {
@@ -85,6 +98,7 @@ function PurchaseDetails({ view, setView }: any) {
       }
       if (type === "viewSell") {
         setView({ sell_id: elem?.purchase_id, ...view });
+
         return;
       }
       if (type === "addExtraExpense") {
@@ -129,6 +143,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
         <td className="px-2 py-4">{elem?.vehicle_chases_no}</td>
         <td className="px-2 py-4">{elem?.vehicle_model}</td>
         <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
+        <td className="px-2 py-4">{elem?.purchase_amount}</td>
         <td className="px-2 py-4">{elem?.purchase_date}</td>
         <td className="px-2 py-4">
           <Button

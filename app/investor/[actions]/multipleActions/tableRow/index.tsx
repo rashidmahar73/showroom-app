@@ -39,6 +39,7 @@ function PurchaseTableRow({ elem, className = "", onClickHandler,isButtons }: an
       <td className="px-2 py-4">{elem?.vehicle_chases_no}</td>
       <td className="px-2 py-4">{elem?.vehicle_model}</td>
       <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
+      <td className="px-2 py-4">{elem?.purchase_amount}</td>
       <td className="px-2 py-4">{elem?.purchase_date}</td>
       <ConditionalRenderer condition={isButtons}>
 

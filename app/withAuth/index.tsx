@@ -1,29 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Navbar } from "../components";
-import { useEffect, useState } from "react";
+import { useUser } from "../providers";
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
-    const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
-      null
-    );
+    const { userData } = useUser();
 
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/login");
-        return;
-      }
-      if (token) {
-        setIsAuthenticated(true);
-        return;
-      }
-    }, []);
-
-    if (isAuthenticated === null) {
+    if (userData?.status !== 200) {
       return <div>Loading...</div>;
     }
 

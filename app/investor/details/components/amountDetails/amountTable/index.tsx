@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { Button, ConditionalRenderer } from "@/app/components";
 import { amountDetailsheadTitles } from "@/app/utils";
 
-function AmountTable({ data, setView }: any) {
+function AmountTable({ data, setView, setData }: any) {
   const router = useRouter();
 
   function onClickHandler(type: any, elem: any) {
@@ -22,6 +22,7 @@ function AmountTable({ data, setView }: any) {
       setView({
         amount_id: elem?.amount_id,
       });
+      setData({ amount_details: elem });
       return;
     }
   }
@@ -90,68 +91,71 @@ function TableRow({ elem, index, onClickHandler, isSingleInvestor }: any) {
   return (
     <>
       <React.Fragment key={index}>
-        {elem?.amount_details?.map((amount: any, idx: number) => (
-          <tr
-            key={idx}
-            className={`${
-              idx === elem?.amount_ids?.length - 1
-                ? "border-b-black border-b-[1px]"
-                : ""
-            } text-[14px] text-center`}
-          >
-            {idx === 0 && (
-              <>
-                <td
-                  className="border border-black px-4 py-2"
-                  rowSpan={elem?.amount_ids?.length}
+        {elem?.amount_details?.map((amount: any, idx: number) => {
+          return (
+            <tr
+              key={idx}
+              className={`${
+                idx === elem?.amount_ids?.length - 1
+                  ? "border-b-black border-b-[1px]"
+                  : ""
+              } text-[14px] text-center`}
+            >
+              {idx === 0 && (
+                <>
+                  <td
+                    className="border border-black px-4 py-2"
+                    rowSpan={elem?.amount_ids?.length}
+                  >
+                    {elem?.investor_id}
+                  </td>
+                </>
+              )}
+
+              <td className="px-2 py-4">{amount?.amount_id}</td>
+              <td className="px-2 py-4">{amount?.investor_amount}</td>
+              <td className="px-2 py-4">{amount?.investor_amount_type}</td>
+              <td className="px-2 py-4">{amount?.investor_amount_date}</td>
+              <td className="px-2 py-4">
+                <Button
+                  className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
+                  onClick={() => onClickHandler("updateAmount", amount)}
                 >
-                  {elem?.investor_id}
-                </td>
-              </>
-            )}
+                  Update
+                </Button>
+              </td>
 
-            <td className="px-2 py-4">{amount?.amount_id}</td>
-            <td className="px-2 py-4">{amount?.investor_amount}</td>
-            <td className="px-2 py-4">{amount?.investor_amount_type}</td>
-            <td className="px-2 py-4">{amount?.investor_amount_date}</td>
-            <td className="px-2 py-4">
-              <Button
-                className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-                onClick={() => onClickHandler("updateAmount", amount)}
+              <ConditionalRenderer
+                condition={
+                  isSingleInvestor && amount?.investor_amount_type !== "Refund"
+                }
               >
-                Update
-              </Button>
-            </td>
-
-            <ConditionalRenderer condition={isSingleInvestor}>
-              <tr>
-                <td className="px-2 py-4">
-                  <div className="flex items-center justify-center cursor-pointer">
-                    <Button
-                      className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
-                      onClick={() =>
-                        onClickHandler(
-                          amount?.is_purchase ? "viewPurchase" : "addPurchase",
-                          {
-                            amount_id: [amount.amount_id],
-                            amount_details: amount,
-                          }
-                        )
-                      }
-                    >
-                      {amount?.is_purchase ? "View" : "Add"} Purchase
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            </ConditionalRenderer>
-
-            {/* {idx === 0 && (
-              <>
-              </>
-            )} */}
-          </tr>
-        ))}
+                <tr>
+                  <td className="px-2 py-4">
+                    <div className="flex items-center justify-center cursor-pointer">
+                      <Button
+                        className="h-[40px] bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
+                        onClick={() =>
+                          onClickHandler(
+                            amount?.is_purchase
+                              ? "viewPurchase"
+                              : "addPurchase",
+                            {
+                              amount_id: [amount.amount_id],
+                              amount_details: amount,
+                            }
+                          )
+                        }
+                      >
+                        {amount?.is_purchase ? "View" : "Add"} Purchase
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              </ConditionalRenderer>
+            </tr>
+          );
+        })}
       </React.Fragment>
     </>
   );

@@ -11,8 +11,6 @@ import { ActionButton } from "../button";
 import { Update } from "./update";
 import { moduleInputItems } from "./helpers";
 
-
-
 function MultipleActions({
   heading,
   defaultObject,
@@ -61,7 +59,7 @@ function MultipleActions({
     }
   }, [apiData]);
 
-  function onClickHandler(type: any, elem: any) {
+  function onClickTableHandler(type: any, elem: any) {
     return () => {
       if (type === "edit") {
         setIsEdit(true);
@@ -71,7 +69,25 @@ function MultipleActions({
     };
   }
 
-  function onClickAddHandler() {
+  const [getUpdateAmountData, { data: updateAmountData }] = UseLazyApiCall({
+    url: "users/investors/updateAmount",
+    method: "PUT",
+  }) as any;
+
+  async function onClickHandler(type: string, updatedData: any) {
+    if (type === "update" && updatedData) {
+      const updateObj = {
+        amount_id: updatedData?.amount_id,
+        investor_id: updatedData?.investor_id,
+        investor_amount: updatedData?.investor_amount,
+        investor_amount_type: updatedData?.investor_amount_type,
+        investor_amount_date: updatedData?.investor_amount_date,
+      };
+
+      await getUpdateAmountData({ params: updateObj });
+      return;
+    }
+
     if (isEdit) {
       setIsEdit(false);
     }
@@ -79,15 +95,26 @@ function MultipleActions({
     setReady(data);
     setData(defaultObject);
   }
-
+  
   const isEmptyFields = hasEmptyString(data);
 
   const inputItems = moduleInputItems(module, data);
 
+  useEffect(() => {
+    if (updateAmountData?.status === 200) {
+      toastHandler(updateAmountData?.message, toastTypesKeys.success);
+      setTimeout(() => {
+        router.push(`/investor`);
+        return;
+      }, 3000);
+      return;
+    }
+  }, [updateAmountData]);
+
   if (isUpdate) {
     return (
       <Update
-        onClickAddHandler={onClickAddHandler}
+        onClickHandler={() => onClickHandler("update", data)}
         data={data}
         setData={setData}
         inputItems={inputItems}
@@ -109,12 +136,12 @@ function MultipleActions({
         items={inputItems}
         setState={setData}
         state={data}
-        variant={module === "amountModule"}
+        variant={module}
       />
 
       <ActionButton
         condition={isEmptyFields}
-        onClick={isEmptyFields ? () => {} : onClickAddHandler}
+        onClick={isEmptyFields ? () => {} : () => onClickHandler("add", {})}
       >
         {isEdit ? "Update" : "Add"}
       </ActionButton>
@@ -124,7 +151,7 @@ function MultipleActions({
             headerList={headTitles}
             items={[ready] || []}
             TableRow={TableRow}
-            onClickHandler={onClickHandler}
+            onClickHandler={onClickTableHandler}
           />
         </div>
         <ActionButton condition={isLoadingAdd} onClick={onSubmit}>

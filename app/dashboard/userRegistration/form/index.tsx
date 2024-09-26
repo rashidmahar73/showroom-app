@@ -11,6 +11,7 @@ function Form({ dataCarrier, editableData }: any) {
           phonenumber: "",
           password: "",
           role: "",
+          showroom_name: "",
         };
 
   const [userData, setUserData] = useState(isData);
@@ -53,6 +54,12 @@ function Form({ dataCarrier, editableData }: any) {
       name: "password",
       value: userData.password,
     },
+    {
+      type: "text",
+      label: "Showroom Name",
+      name: "showroom_name",
+      value: userData.showroom_name,
+    },
   ];
 
   const isFormFilled =
@@ -60,7 +67,9 @@ function Form({ dataCarrier, editableData }: any) {
     !userData.email ||
     !userData.password ||
     !userData.phonenumber ||
-    !userData.role;
+    !userData.role ||
+    !userData?.showroom_name ||
+    !userData.email?.includes("@");
 
   return (
     <div>
@@ -94,17 +103,17 @@ function Form({ dataCarrier, editableData }: any) {
           selectedValue={userData?.role}
           onClickHanlder={onClickHanlder}
         />
-        <div className="flex justify-end mt-5">
-          <Button
-            className={`h-[40px] text-white px-3 text-[13px] rounded-[5px] ${
-              isFormFilled ? "bg-[#2182b0] bg-opacity-50" : "bg-[#2182b0]"
-            }`}
-            onClick={onSubmit}
-            disabled={isFormFilled}
-          >
-            Submit
-          </Button>
-        </div>
+      </div>
+      <div className="flex justify-end mt-5">
+        <Button
+          className={`h-[40px] text-white px-6 text-[13px] rounded-[5px] ${
+            isFormFilled ? "bg-[#2182b0] bg-opacity-50" : "bg-[#2182b0]"
+          }`}
+          onClick={onSubmit}
+          disabled={isFormFilled}
+        >
+          {Object.keys(editableData).length > 0 ? "Update" : "Submit"}
+        </Button>
       </div>
     </div>
   );
