@@ -29,18 +29,19 @@ function UserRegistration({
 
   async function dataCarrier(userData: any) {
     if (Object.keys(editableData)?.length > 0) {
-      const updateUser={
-        userID:userData?.id,
+      const updateUser = {
+        userID: userData?.id,
         name: userData.name,
         email: userData.email,
         phonenumber: Number(userData.phonenumber),
         password: userData.password,
         role: userData?.role?.toLowerCase(),
-        showroom_name: userData?.showroom_name,    
-      }
-      await getUpdateUserData({params:updateUser});
+        showroom_name: userData?.showroom_name,
+      };
+      await getUpdateUserData({ params: updateUser });
       return;
     }
+
     const userDataDetails = {
       name: userData.name,
       email: userData.email,
@@ -50,7 +51,7 @@ function UserRegistration({
       showroom_name: userData?.showroom_name,
     };
 
-    getData({ params: userDataDetails });
+    await getData({ params: userDataDetails });
   }
 
   useEffect(() => {
@@ -64,16 +65,15 @@ function UserRegistration({
     }
   }, [signupData]);
 
-  useEffect(()=>{
-    if(updateUserData?.status===200){
+  useEffect(() => {
+    if (updateUserData?.status === 200) {
       toastHandler(updateUserData.message, toastTypesKeys.success);
       setTimeout(() => {
         setIsShow(false);
         refetchUsers();
       }, 3000);
     }
-
-  },[updateUserData])
+  }, [updateUserData]);
 
   return (
     <>

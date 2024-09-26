@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect} from "react";
 import { UseLazyApiCall } from "../hooks";
 import { Form } from "./form";
 import { toastHandler } from "../utils/helpers";
@@ -39,12 +39,12 @@ function Login() {
 
   useEffect(() => {
     if (loginData?.status === 200) {
-      toastHandler(loginData.message, toastTypesKeys.success);
+      toastHandler(loginData?.message, toastTypesKeys.success);
       setUser({ userID: loginData?.user?.id });
       setTimeout(() => {
         localStorage.setItem("token", loginData?.token);
         localStorage.setItem("userID", loginData?.user?.id);
-        router.push(`/dashboard`);
+        router.push(`/users`);
         return;
       }, 3000);
       return;

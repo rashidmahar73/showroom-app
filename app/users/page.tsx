@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, ConditionalRenderer, TableWrapper } from "../components";
+import { Button, TableWrapper } from "../components";
 import { headTitles } from "./helpers";
 import { UserRegistration } from "./userRegistration";
 import { UseApiCall, UseLazyApiCall } from "../hooks";
 import { ToastContainer } from "react-toastify";
 import { toastHandler } from "../utils/helpers";
 import { toastTypesKeys } from "../utils/constants";
-import withAuth from "../withAuth";
 import { EyeCloseIcon, EyeOpenIcon } from "../icons";
+import withAuth from "../withAuth";
 
 function Dashboard() {
   const [isShow, setIsShow] = useState(false);
