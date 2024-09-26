@@ -11,7 +11,7 @@ import { toastTypesKeys } from "../utils/constants";
 import { EyeCloseIcon, EyeOpenIcon } from "../icons";
 import withAuth from "../withAuth";
 
-function Dashboard() {
+function Users() {
   const [isShow, setIsShow] = useState(false);
   const [isEdit, setIsEdit] = useState({ data: {} });
 
@@ -96,7 +96,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     <tr
       className={
         className ||
-        "even:bg-[#ECEDED] text-center text-[16px] w-full text-black"
+        "even:bg-[#ECEDED] text-center text-[14px] w-full text-black"
       }
     >
       <td className="px-2 py-4">{elem?.id}</td>
@@ -138,4 +138,4 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
   );
 }
 
-export default withAuth(Dashboard);
+export default withAuth(Users);

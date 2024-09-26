@@ -99,17 +99,27 @@ function Actions() {
           parsedData={parsedData}
           submitKey={{ amount_id: parsedData?.amount_id }}
           isUpdate={paths?.updatePurchase === pathname}
-          detailsHeading="Amount Details"
+          detailsHeading={
+            Array.isArray(parsedData?.amount_id) &&
+            parsedData?.amount_id?.length > 1
+              ? ""
+              : "Amount Details"
+          }
           DetailsTable={
-            <TableWrapper
-              headerList={amountHeadTitles?.filter(
-                (item, index) => index !== 3
-              )}
-              items={[parsedData?.amount_details] || []}
-              TableRow={AmountTableRow}
-              onClickHandler={() => {}}
-              isButtons={false}
-            />
+            Array.isArray(parsedData?.amount_id) &&
+            parsedData?.amount_id?.length > 1 ? (
+              <></>
+            ) : (
+              <TableWrapper
+                headerList={amountHeadTitles?.filter(
+                  (item, index) => index !== 3
+                )}
+                items={[parsedData?.amount_details] || []}
+                TableRow={AmountTableRow}
+                onClickHandler={() => {}}
+                isButtons={false}
+              />
+            )
           }
         />
       </ConditionalRenderer>

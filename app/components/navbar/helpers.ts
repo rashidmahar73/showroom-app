@@ -2,8 +2,8 @@ import { navPaths } from "../../utils/constants";
 
 const navItems = [
   {
-    text: "Dashboard",
-    path: "/dashboard",
+    text: "Users",
+    path: "/users",
   },
   {
     text: "Employee",

@@ -131,6 +131,7 @@ function Salary() {
 }
 
 function TableRow({ elem, className = "", onClickHandler }: any) {
+  const paid_on_date=elem?.paid_on?.split("T")?.[0];
   return (
     <tr
       className={
@@ -144,7 +145,7 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-2 py-4">{elem?.total_days}</td>
       <td className="px-2 py-4">{elem?.per_month_salary}</td>
       <td className="px-2 py-4">{elem?.leave}</td>
-      <td className="px-2 py-4">{elem?.paid_on}</td>
+      <td className="px-2 py-4">{paid_on_date}</td>
       <td className="px-2 py-4">{elem?.total_paid}</td>
     </tr>
   );
