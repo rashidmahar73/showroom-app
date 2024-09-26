@@ -90,7 +90,6 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     hire_date: hire_date,
   };
   return (
-    <>
       <tr
         className={
           className ||
@@ -132,25 +131,6 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
           </Link>
         </td>
       </tr>
-      {/* <ConditionalRenderer condition={isShowDetails?.status}>
-        <tr className="text-[15px] font-bold my-2 bg-[#ECEDED]">
-          <td className="py-2">Hire Date</td>
-          <td className=" py-2">Salary/Month</td>
-          <td className=" py-2">Account No</td>
-          <td className=" py-2">Account Name</td>
-          <td className=" py-2">Branch Code</td>
-          <td className=" py-2">Branch City</td>
-        </tr>
-        <tr className="my-2  text-[14px] text-black">
-          <td className=" py-2">{hire_date}</td>
-          <td className=" py-2">{elem?.per_month_salary}</td>
-          <td className=" py-2">{elem?.account_no}</td>
-          <td className=" py-2">{elem?.bank_account_name}</td>
-          <td className=" py-2">{elem?.branch_code}</td>
-          <td className=" py-2">{elem?.branch_city}</td>
-        </tr>
-      </ConditionalRenderer> */}
-    </>
   );
 }
 
