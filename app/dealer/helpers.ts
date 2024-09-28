@@ -9,17 +9,6 @@ const headTitles = [
     styling: "w-[8%] text-[15px] text-center",
     title: "Deal ID",
   },
-  {
-    id: 2,
-    styling: "w-[8%] text-[15px] text-center",
-    title: "Owner Name",
-  },
-  {
-    id: 3,
-    styling: "w-[8%] text-[15px] text-center",
-    title: "Owner Phone Number",
-  },
-  { id: 4, styling: "w-[8%] text-[15px] text-center", title: "Price Demand" },
   { id: 5, styling: "w-[8%] text-[15px] text-center", title: "Deal Date" },
   {
     id: 6,
@@ -51,6 +40,11 @@ const headTitles = [
     id: 11,
     styling: "w-[8%] text-[15px] text-center",
     title: "Status",
+  },
+  {
+    id: 12,
+    styling: "w-[8%] text-[15px] text-center",
+    title: "Details",
   },
   {
     id: 12,

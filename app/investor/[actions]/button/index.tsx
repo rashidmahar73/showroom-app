@@ -8,6 +8,7 @@ function ActionButton({ condition, onClick, children }: any) {
           condition ? "opacity-40 cursor-default" : "opacity-100 cursor-pointer"
         } h-[40px] text-white px-5 text-[13px] rounded-[5px] bg-[#2182b0]`}
         onClick={onClick}
+        disabled={condition}
       >
         {children}
       </Button>

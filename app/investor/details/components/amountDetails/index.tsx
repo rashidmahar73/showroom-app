@@ -15,7 +15,7 @@ function AmountDetails({ setView, parsedData, setData }: any) {
   return (
     <>
       <h1 className="text-[20px] font-bold my-5">Amount Details</h1>
-        <AmountTable data={amountData?.data} setView={setView} setData={setData} />
+        <AmountTable data={amountData?.data} setView={setView} setData={setData} parsedData={parsedData} />
     </>
   );
 }

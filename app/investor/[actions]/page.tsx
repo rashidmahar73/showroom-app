@@ -50,7 +50,7 @@ function Actions() {
   const parsedData = encodedData
     ? JSON.parse(decodeURIComponent(encodedData))
     : null;
-
+    
   return (
     <div>
       <ConditionalRenderer condition={paths?.investorAdd === pathname}>

@@ -3,22 +3,30 @@ function AccountDetails({ elem }: any) {
 
   return (
     <div className="bg-white rounded-lg shadow-md space-y-4">
-      <div className="flex justify-between bg-gray-200 text-gray-600 text-sm font-bold uppercase p-4 rounded-md">
-        <div className="w-1/6">Hire Date</div>
-        <div className="w-1/6">Salary/Month</div>
-        <div className="w-1/6">Account No</div>
-        <div className="w-1/5">Account Name</div>
-        <div className="w-1/6">Branch Code</div>
-        <div className="w-1/6">Branch City</div>
-      </div>
+      <div className="bg-white rounded-lg shadow-md">
+        <table className="min-w-full bg-white">
+          <thead>
+            <tr className="bg-gray-200 text-gray-600 text-sm font-bold uppercase text-center">
+              <th className="py-4 w-[8%]">Hire Date</th>
+              <th className="py-4 w-[8%]">Salary/Month</th>
+              <th className="py-4 w-[8%]">Account No</th>
+              <th className="py-4 w-[8%]">Bank Name</th>
+              <th className="py-4 w-[8%]">Branch Code</th>
+              <th className="py-4 w-[8%]">Branch City</th>
+            </tr>
+          </thead>
 
-      <div className="flex justify-between text-black text-sm p-4 rounded-md bg-gray-50 shadow-sm hover:shadow-lg transition-shadow">
-        <div className="w-1/6">{hire_date}</div>
-        <div className="w-1/6">{elem?.per_month_salary}</div>
-        <div className="w-1/6">{elem?.account_no}</div>
-        <div className="w-1/6">{elem?.bank_account_name}</div>
-        <div className="w-1/6">{elem?.branch_code}</div>
-        <div className="w-1/6">{elem?.branch_city}</div>
+          <tbody>
+            <tr className="bg-gray-50 text-center hover:bg-gray-100 text-sm text-black">
+              <td className="py-4">{hire_date}</td>
+              <td className="py-4">{elem?.per_month_salary}</td>
+              <td className="py-4">{elem?.account_no}</td>
+              <td className="py-4">{elem?.bank_account_name}</td>
+              <td className="py-4">{elem?.branch_code}</td>
+              <td className="py-4">{elem?.branch_city}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );

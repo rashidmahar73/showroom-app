@@ -22,7 +22,7 @@ function Login() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      router.push("/dashboard");
+      router.push("/users");
       return;
     }
   }, []);

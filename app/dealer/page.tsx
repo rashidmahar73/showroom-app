@@ -1,15 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, Pagination, TableWrapper } from "../components";
+import { Button, Modal, Pagination, TableWrapper } from "../components";
 import withAuth from "../withAuth";
 import { UseApiCall } from "../hooks";
 import { useState } from "react";
 import { headTitles } from "./helpers";
 import { useUser } from "../providers";
 import { ToastContainer } from "react-toastify";
+import { OwnerDetails } from "./ownerDetails";
 
 function Dealer() {
+  const [isShowDetails, setIsShowDetails] = useState({
+    status: false,
+    detail: {},
+  });
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const router = useRouter();
 
@@ -36,6 +41,10 @@ function Dealer() {
 
   function onClickTableHandler(type: string, elem: any) {
     return () => {
+      if (type === "accountDetails") {
+        setIsShowDetails({ status: true, detail: elem });
+        return;
+      }
       const serializedObject = encodeURIComponent(JSON.stringify(elem));
       router.push(`dealer/updateDeals?data=${serializedObject}`);
       return;
@@ -46,10 +55,15 @@ function Dealer() {
     setCurrentPageNumber(pageNumber);
   }
 
+  function handleModalClose() {
+    setIsShowDetails({ status: false, detail: {} });
+  }
+
   if (dealsDetailsData?.data?.length === 0) {
     return (
       <div className="mx-20">
         <ToastContainer />
+
         <h1 className="text-[20px] text-center font-bold my-5">Deals</h1>
         <div className="flex justify-end">
           <Button
@@ -68,6 +82,18 @@ function Dealer() {
 
   return (
     <div className="mx-20">
+      <Modal
+        isShow={isShowDetails?.status}
+        className="flex items-center justify-center"
+      >
+        <Modal.Header
+          title="Owner Details"
+          onclickHandler={handleModalClose}
+        />
+        <div className="w-[120dvh]">
+          <OwnerDetails elem={isShowDetails?.detail} />
+        </div>
+      </Modal>
       <h1 className="text-[23px] text-center font-bold my-5">Deals</h1>
       <div className="flex justify-end">
         <Button
@@ -115,9 +141,6 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
     >
       <td className="px-2 py-4">{elem?.tracking_id}</td>
       <td className="px-2 py-4">{elem?.deals_id}</td>
-      <td className="px-2 py-4">{elem?.owner_name}</td>
-      <td className="px-2 py-4">{elem?.owner_phone_number}</td>
-      <td className="px-2 py-4">{elem?.price_demand}</td>
       <td className="px-2 py-4">{deal_date}</td>
       <td className="px-2 py-4">{elem?.vehicle_company}</td>
       <td className="px-2 py-4">{elem?.vehicle_type}</td>
@@ -126,6 +149,14 @@ function TableRow({ elem, className = "", onClickHandler }: any) {
       <td className="px-2 py-4">{elem?.vehicle_model}</td>
       <td className="px-2 py-4">{elem?.vehicle_meter_reading}</td>
       <td className="px-2 py-4">{elem?.status}</td>
+      <td className=" py-4">
+        <Button
+          className="h-[40px] py-2 bg-[#2182b0] text-[13px] text-white px-2 rounded-[5px]"
+          onClick={onClickHandler("accountDetails", elem)}
+        >
+          Details
+        </Button>
+      </td>
       <td className="px-2 py-4">
         <Button
           className="h-[40px] bg-[#2182b0] text-[15px] text-white px-2 rounded-[5px]"

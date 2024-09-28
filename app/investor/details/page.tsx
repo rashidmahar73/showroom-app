@@ -42,7 +42,8 @@ function Details() {
     setIsOpen(false);
   }
 
-  console.log(data, "data");
+  console.log(data,'data')
+
 
   return (
     <div className="mx-20">
@@ -79,7 +80,7 @@ function Details() {
         <SellDetails view={view} setData={setData} data={data} />
       </ConditionalRenderer>
       <ConditionalRenderer
-        condition={!!view?.sell_id && !!view?.purchase_id && !!view?.sell_id}
+        condition={!!view?.sell_id && view?.amount_id?.length>0}
       >
         <div className="flex justify-end my-5">
           <Button

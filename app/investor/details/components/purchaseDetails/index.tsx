@@ -2,7 +2,6 @@ import { Button, TableWrapper } from "@/app/components";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { UseLazyApiCall } from "@/app/hooks";
-import { purchaseHeadTitles } from "@/app/investor/headTitles";
 
 const headTitles = [
   {

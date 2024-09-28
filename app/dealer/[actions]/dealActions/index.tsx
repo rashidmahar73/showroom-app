@@ -40,7 +40,6 @@ function AddOrUpdateDealer() {
   const searchParams = useSearchParams();
 
   const encodedData = searchParams?.get("data");
-  console.log(encodedData,'encodedData')
   const parsedData = encodedData
     ? JSON.parse(decodeURIComponent(encodedData))
     : null;

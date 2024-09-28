@@ -92,7 +92,6 @@ function Salary() {
     },
   ];
 
-  console.log(salaryDetailsData, "salaryDetailsData");
   return (
     <div className="mx-20">
       <ToastContainer />

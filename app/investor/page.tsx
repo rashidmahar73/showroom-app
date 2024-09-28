@@ -62,7 +62,7 @@ function Investor() {
 
       if (type === "addAmount") {
         const serializedObject = encodeURIComponent(JSON.stringify(elem));
-        router.push(`investor/addAmount?data=${serializedObject}`);
+        router.push(`investor/addAmount?data=${serializedObject}`);    
         return;
       }
 
